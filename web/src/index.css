@@ -1,0 +1,62 @@
+@import "tailwindcss";
+
+@layer base {
+
+  html,
+  body,
+  #root {
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    background-color: #0d0d11;
+    color: #e4e1e6;
+    overflow-x: hidden;
+  }
+}
+
+@keyframes pulseGlow {
+
+  0%,
+  100% {
+    opacity: 0.3;
+    transform: scale(1);
+  }
+
+  50% {
+    opacity: 0.6;
+    transform: scale(1.08);
+  }
+}
+
+@keyframes beamDrop {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(120vh);
+    opacity: 0;
+  }
+}
+
+.animate-beam-1 {
+  animation: beamDrop 7s linear infinite;
+}
+
+.animate-beam-2 {
+  animation: beamDrop 9s linear infinite 2s;
+}
+
+.animate-beam-3 {
+  animation: beamDrop 6s linear infinite 4s;
+}
+
+.animate-beam-4 {
+  animation: beamDrop 8s linear infinite 1s;
+}
