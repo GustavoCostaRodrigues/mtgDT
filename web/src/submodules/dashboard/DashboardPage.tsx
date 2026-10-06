@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { AppNav } from '../../components/navbar/AppNav';
 import { DeckOptionsMenu } from '../../components/dashboard/DeckOptionsMenu';
+import { colors } from '../../styles/colors'; // Ajuste o caminho se necessário para o seu projeto
 
 interface DashboardPageProps {
   onLogout?: () => void;
@@ -57,7 +58,7 @@ const topCards = [
 
 function Mana({ value }: { value: string }) {
   return (
-    <span className="flex items-center gap-1 text-xs font-bold text-[#625d59]">
+    <span className="flex items-center gap-1 text-xs font-bold" style={{ color: colors.light['text-muted'] }}>
       {value.split('').map((char, index) => (
         <span key={`${char}-${index}`} className={`mana-dot mana-${char.toLowerCase()}`}>
           {char}
@@ -74,7 +75,13 @@ function ManaCurve({ values }: { values: number[] }) {
       <span className="sr-only">Curva de mana por custo de 0 a 6</span>
       {values.map((value, index) => (
         <span className="mana-bar-wrap" key={index}>
-          <span className="mana-bar" style={{ height: `${Math.max(12, (value / max) * 100)}%` }} />
+          <span
+            className="mana-bar"
+            style={{
+              height: `${Math.max(12, (value / max) * 100)}%`,
+              backgroundColor: colors.light.bronze
+            }}
+          />
           <small>{index}</small>
         </span>
       ))}
@@ -101,42 +108,53 @@ export function DashboardPage({ onLogout, onNavigate, onSearch }: DashboardPageP
   const [topFilter, setTopFilter] = useState('Mais usadas');
 
   return (
-    <main className="dashboard-shell min-h-screen bg-[#f2efe8] text-[#24211f]">
+    <main
+      className="dashboard-shell min-h-screen flex flex-col w-full"
+      style={{ backgroundColor: colors.light['surface-alt'], color: colors.light['text-main'] }}
+    >
       <AppNav activeNav="#visao-geral" onLogout={onLogout} onNavigate={onNavigate} onSearch={onSearch} />
 
-      <section className="dashboard-content" id="visao-geral">
-        <div className="dashboard-main">
-          {/* Stats Bar */}
-          <div className="dashboard-stats">
+      <section className="dashboard-content w-full" id="visao-geral">
+        <div className="dashboard-main max-w-[1440px] mx-auto w-full px-6 lg:px-10 py-8">
+
+          {/* Quick Actions */}
+          <div className="dashboard-section-heading mt-2">
             <div>
-              <p>Cartas catalogadas</p>
-              <strong>1.248</strong>
-              <span className="positive">+12 esta semana</span>
+              <p className="eyebrow" style={{ color: colors.light.bronze }}>Ações rápidas</p>
+              <h2 style={{ color: colors.light['text-main'] }}>Continue de onde parou</h2>
             </div>
-            <div>
-              <p>Valor estimado</p>
-              <strong>R$ 8.420</strong>
-              <span>coleção física</span>
-            </div>
-            <div>
-              <p>Decks ativos</p>
-              <strong>06</strong>
-              <span>2 prontos para jogar</span>
-            </div>
-            <div>
-              <p>Formato favorito</p>
-              <strong>Commander</strong>
-              <span>3 decks ativos</span>
-            </div>
+          </div>
+          <div className="quick-actions">
+            <a href="#importar" style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border }}>
+              <span style={{ color: colors.light.bronze }}>↥</span>
+              <div>
+                <strong>Importar decklist</strong>
+                <small className="block text-xs" style={{ color: colors.light['text-light'] }}>Cole uma lista do Moxfield, Archidekt ou texto</small>
+              </div>
+            </a>
+            <a href="#exportar" style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border }}>
+              <span style={{ color: colors.light.bronze }}>↧</span>
+              <div>
+                <strong>Exportar coleção</strong>
+                <small className="block text-xs" style={{ color: colors.light['text-light'] }}>JSON ou bloco de notas</small>
+              </div>
+            </a>
+            <a href="#novo-deck" style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border }}>
+              <span style={{ color: colors.light.bronze }}>＋</span>
+              <div>
+                <strong>Criar novo deck</strong>
+                <small className="block text-xs" style={{ color: colors.light['text-light'] }}>Comece por um formato</small>
+              </div>
+            </a>
           </div>
 
           {/* Section Heading */}
-          <div className="dashboard-section-heading">
+          <div id="deckbuilder" className="dashboard-section-heading mt-10 sm:mt-12 scroll-mt-24">
             <div>
-              <p className="eyebrow">Sua bancada</p>
-              <h2>Decks em andamento</h2>
+              <p className="eyebrow" style={{ color: colors.light.bronze }}>Sua bancada</p>
+              <h2 style={{ color: colors.light['text-main'] }}>Decks em andamento</h2>
             </div>
-            <a href="#deckbuilder" className="text-sm font-bold text-[#9b7130]">
+            <a href="#deckbuilder" className="text-sm font-bold hover:underline" style={{ color: colors.light.bronze }}>
               Abrir deckbuilder →
             </a>
           </div>
@@ -144,7 +162,11 @@ export function DashboardPage({ onLogout, onNavigate, onSearch }: DashboardPageP
           {/* Decks Grid */}
           <div className="deck-grid">
             {deckCards.map((deck) => (
-              <article className="deck-card" key={deck.name}>
+              <article
+                className="deck-card rounded-2xl overflow-hidden border shadow-sm"
+                key={deck.name}
+                style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border }}
+              >
                 <div className="deck-cover" style={{ backgroundImage: `linear-gradient(180deg, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.85) 100%), url(${deck.image})` }}>
                   <span className="deck-cover-title">{deck.name}</span>
                   <span className={`deck-status ${deck.progress === 100 ? 'ready' : ''}`}>{deck.status}</span>
@@ -152,69 +174,42 @@ export function DashboardPage({ onLogout, onNavigate, onSearch }: DashboardPageP
                 <div className="p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <h3 className="font-black tracking-[-0.03em] text-[#171513] text-base">{deck.name}</h3>
-                      <p className="mt-1 text-xs text-[#8b847c]">{deck.format}</p>
+                      <h3 className="font-black tracking-[-0.03em] text-base" style={{ color: colors.light.dark }}>{deck.name}</h3>
+                      <p className="mt-1 text-xs" style={{ color: colors.light['text-light'] }}>{deck.format}</p>
                     </div>
                     <ManaCurve values={deck.manaCurve} />
                     <DeckOptionsMenu deckName={deck.name} />
                   </div>
 
-                  <div className="mt-5 flex items-center justify-between text-[11px] font-bold text-[#8b847c]">
+                  <div className="mt-5 flex items-center justify-between text-[11px] font-bold" style={{ color: colors.light['text-light'] }}>
                     <span>Conclusão</span>
                     <span>
-                      {deck.progress}% <strong className="deck-card-count font-black text-[#171513]">{deck.cards}</strong>
+                      {deck.progress}% <strong className="deck-card-count font-black" style={{ color: colors.light.dark }}>{deck.cards}</strong>
                     </span>
                   </div>
 
-                  <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-[#e5e0d7]">
-                    <div className="h-full rounded-full bg-[#9b7130]" style={{ width: `${deck.progress}%` }} />
+                  <div className="mt-2 h-1.5 overflow-hidden rounded-full" style={{ backgroundColor: colors.light['surface-alt'] }}>
+                    <div className="h-full rounded-full" style={{ width: `${deck.progress}%`, backgroundColor: colors.light.bronze }} />
                   </div>
                 </div>
               </article>
             ))}
           </div>
 
-          {/* Quick Actions */}
-          <div className="dashboard-section-heading mt-12">
-            <div>
-              <p className="eyebrow">Ações rápidas</p>
-              <h2>Continue de onde parou</h2>
-            </div>
-          </div>
-          <div className="quick-actions">
-            <a href="#importar">
-              <span>↥</span>
-              <div>
-                <strong>Importar decklist</strong>
-                <small className="block text-xs text-[#8b847c]">Cole uma lista do Moxfield, Archidekt ou texto</small>
-              </div>
-            </a>
-            <a href="#exportar">
-              <span>↧</span>
-              <div>
-                <strong>Exportar coleção</strong>
-                <small className="block text-xs text-[#8b847c]">JSON ou bloco de notas</small>
-              </div>
-            </a>
-            <a href="#novo-deck">
-              <span>＋</span>
-              <div>
-                <strong>Criar novo deck</strong>
-                <small className="block text-xs text-[#8b847c]">Comece por um formato</small>
-              </div>
-            </a>
-          </div>
-
           {/* Lower Grid Panels */}
-          <section className="dashboard-lower-grid">
+          <section className="dashboard-lower-grid mt-10 sm:mt-12">
             {/* Wishlist Panel */}
-            <div className="dashboard-panel" id="lista-de-desejos">
+            <div
+              className="dashboard-panel rounded-2xl border p-6 shadow-sm scroll-mt-24"
+              id="lista-de-desejos"
+              style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border }}
+            >
               <div className="panel-heading">
                 <div>
-                  <p className="eyebrow">Próximas aquisições</p>
-                  <h2>Lista de desejos</h2>
+                  <p className="eyebrow" style={{ color: colors.light.bronze }}>Próximas aquisições</p>
+                  <h2 style={{ color: colors.light['text-main'] }}>Lista de desejos</h2>
                 </div>
-                <button className="text-sm font-bold text-[#9b7130] cursor-pointer" type="button">
+                <button className="text-sm font-bold cursor-pointer border-0 bg-transparent p-0 hover:underline" type="button" style={{ color: colors.light.bronze }}>
                   Ver tudo →
                 </button>
               </div>
@@ -224,11 +219,15 @@ export function DashboardPage({ onLogout, onNavigate, onSearch }: DashboardPageP
                   <div className="wishlist-row" key={card.name}>
                     <CardThumb image={card.image} name={card.name} large />
                     <div className="min-w-0 flex-1">
-                      <strong className="block truncate text-sm text-[#171513]">{card.name}</strong>
+                      <strong className="block truncate text-sm" style={{ color: colors.light.dark }}>{card.name}</strong>
                       <Mana value={card.mana} />
-                      <small className="text-xs text-[#8b847c]">{card.price}</small>
+                      <small className="text-xs" style={{ color: colors.light['text-light'] }}>{card.price}</small>
                     </div>
-                    <button className="arrived-button" type="button">
+                    <button
+                      className="arrived-button px-3 py-1 rounded-full text-xs font-semibold border transition-colors cursor-pointer"
+                      type="button"
+                      style={{ borderColor: colors.light.border, color: colors.light.dark, backgroundColor: colors.light['surface-alt'] }}
+                    >
                       Chegou
                     </button>
                   </div>
@@ -237,11 +236,14 @@ export function DashboardPage({ onLogout, onNavigate, onSearch }: DashboardPageP
             </div>
 
             {/* Top Cards Panel */}
-            <div className="dashboard-panel">
+            <div
+              className="dashboard-panel rounded-2xl border p-6 shadow-sm"
+              style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border }}
+            >
               <div className="panel-heading">
                 <div>
-                  <p className="eyebrow">Sua coleção física</p>
-                  <h2>Top cards</h2>
+                  <p className="eyebrow" style={{ color: colors.light.bronze }}>Sua coleção física</p>
+                  <h2 style={{ color: colors.light['text-main'] }}>Top cards</h2>
                 </div>
               </div>
 
@@ -252,6 +254,7 @@ export function DashboardPage({ onLogout, onNavigate, onSearch }: DashboardPageP
                     className={topFilter === filter ? 'active' : ''}
                     onClick={() => setTopFilter(filter)}
                     type="button"
+                    style={topFilter === filter ? { backgroundColor: colors.light.dark, color: '#fff' } : {}}
                   >
                     {filter}
                   </button>
@@ -261,14 +264,14 @@ export function DashboardPage({ onLogout, onNavigate, onSearch }: DashboardPageP
               <div className="top-card-list">
                 {topCards.map((card, index) => (
                   <div className="top-card-row" key={card.name}>
-                    <span className="rank">0{index + 1}</span>
+                    <span className="rank font-mono text-xs font-bold" style={{ color: colors.light.bronze }}>0{index + 1}</span>
                     <CardThumb image={card.image} name={card.name} />
                     <div className="min-w-0 flex-1">
-                      <strong className="block truncate text-sm text-[#171513]">{card.name}</strong>
+                      <strong className="block truncate text-sm" style={{ color: colors.light.dark }}>{card.name}</strong>
                       <Mana value={card.mana} />
-                      <small className="text-xs text-[#8b847c]">{card.meta}</small>
+                      <small className="text-xs" style={{ color: colors.light['text-light'] }}>{card.meta}</small>
                     </div>
-                    <span className="font-bold text-xs text-[#171513]">{card.value}</span>
+                    <span className="font-bold text-xs" style={{ color: colors.light.dark }}>{card.value}</span>
                   </div>
                 ))}
               </div>

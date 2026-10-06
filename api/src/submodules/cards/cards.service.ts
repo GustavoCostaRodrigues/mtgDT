@@ -67,31 +67,86 @@ export async function importCardFromScryfall(data: ImportCardInput) {
 
 // --- READ --------------------------------------------------------------------
 
-// Buscar cartas no catálogo geral por trecho de nome (ilike)
+// Buscar cartas no catálogo geral por trecho de nome (ilike ou Scryfall API)
 export async function searchCards(userJwt: string, filters: SearchCardsQueryInput) {
     const supabase = createDbClient(userJwt);
 
-    const { data, error } = await supabase
-        .from('scryfall_cards_cache')
-        .select(`
-      id,
-      name,
-      set_code,
-      collector_number,
-      mana_cost,
-      type_line,
-      rarity,
-      image_uris
-    `)
+    // 1. Tenta buscar primeiro na tabela cards
+    let { data, error } = await supabase
+        .from('cards')
+        .select('*')
         .ilike('name', `%${filters.q}%`)
         .order('name', { ascending: true })
         .limit(filters.limit);
 
-    if (error) {
-        throw new Error(`Erro ao buscar cartas: ${error.message}`);
+    // 2. Se não encontrar em cards, tenta em scryfall_cards_cache
+    if (error || !data || data.length === 0) {
+        const { data: cacheData } = await supabase
+            .from('scryfall_cards_cache')
+            .select(`
+                id,
+                name,
+                set_code,
+                collector_number,
+                mana_cost,
+                type_line,
+                rarity,
+                image_uris
+            `)
+            .ilike('name', `%${filters.q}%`)
+            .order('name', { ascending: true })
+            .limit(filters.limit);
+
+        if (cacheData && cacheData.length > 0) {
+            data = cacheData.map((c: any) => ({
+                id: c.id,
+                name: c.name,
+                set_code: c.set_code,
+                collector_number: c.collector_number,
+                mana_cost: c.mana_cost,
+                type_line: c.type_line,
+                rarity: c.rarity,
+                image_url: c.image_uris?.normal || c.image_uris?.large || null,
+            }));
+        }
     }
 
-    return data;
+    // 3. Se ainda não houver resultados no banco local, faz fallback diretamente na API do Scryfall
+    if (!data || data.length === 0) {
+        try {
+            const scryfallRes = await fetch(`https://api.scryfall.com/cards/search?q=${encodeURIComponent(filters.q)}`, {
+                headers: {
+                    'User-Agent': 'MTGDeckTracker/1.0',
+                    'Accept': 'application/json',
+                },
+            });
+
+            if (scryfallRes.ok) {
+                const scryfallData = await scryfallRes.json();
+                data = (scryfallData.data || []).slice(0, filters.limit).map((c: any) => {
+                    const img = c.image_uris?.normal || c.image_uris?.large || c.card_faces?.[0]?.image_uris?.normal || null;
+                    return {
+                        id: c.id,
+                        scryfall_id: c.id,
+                        name: c.name,
+                        set_code: c.set,
+                        set_name: c.set_name,
+                        collector_number: c.collector_number,
+                        mana_cost: c.mana_cost || null,
+                        type_line: c.type_line || '',
+                        rarity: c.rarity || 'common',
+                        image_url: img,
+                        prices: c.prices || {},
+                        colors: c.colors || c.color_identity || [],
+                    };
+                });
+            }
+        } catch (err) {
+            console.error('Erro ao buscar cartas no Scryfall API:', err);
+        }
+    }
+
+    return data || [];
 }
 
 // Buscar detalhes completos de uma carta do catálogo por ID
