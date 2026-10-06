@@ -3,9 +3,9 @@ import { HeroPage } from './submodules/hero/HeroPage';
 import { LoginPage } from './submodules/auth/loginPage';
 import { RegisterPage } from './submodules/auth/RegisterPage';
 import { DashboardPage } from './submodules/dashboard/DashboardPage';
-import { MinhaColecaoPage } from './submodules/dashboard/MinhaColecaoPage';
-import { CartaPage } from './submodules/dashboard/CartaPage';
-import { BuscarCartasPage } from './submodules/dashboard/BuscarCartasPage';
+import MinhaColecaoPage from './submodules/colecao/MinhaColecaoPage';
+import { CartaPage } from './submodules/carta/CartaPage';
+import { BuscarCartasPage } from './submodules/buscar-cartas/BuscarCartasPage';
 
 type Page = 'hero' | 'login' | 'register' | 'dashboard' | 'minha-colecao' | 'carta' | 'buscar-cartas';
 
@@ -15,12 +15,31 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const handleNavigate = (href: string) => {
-    if (href === '#minha-colecao' || href === '/minha-colecao') {
+    if (href === '#minha-colecao' || href === '/minha-colecao' || href === '#colecao') {
       setCurrentPage('minha-colecao');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (href === '/buscar-cartas' || href === '#buscar-cartas') {
       setCurrentPage('buscar-cartas');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     } else if (href === '#visao-geral' || href === '/' || href === '/dashboard') {
       setCurrentPage('dashboard');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else if (href === '#deckbuilder' || href === '/decks' || href === '#decks' || href === '/deckbuilder') {
+      setCurrentPage('dashboard');
+      setTimeout(() => {
+        const el = document.getElementById('deckbuilder') || document.getElementById('decks');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 50);
+    } else if (href === '#lista-de-desejos' || href === '/desejos') {
+      setCurrentPage('dashboard');
+      setTimeout(() => {
+        const el = document.getElementById('lista-de-desejos');
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 50);
     } else {
       setCurrentPage('dashboard');
     }

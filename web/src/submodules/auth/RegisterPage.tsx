@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { colors } from '../../styles/colors';
 
 interface RegisterPageProps {
   onNavigateLogin?: () => void;
@@ -23,24 +24,42 @@ export function RegisterPage({ onNavigateLogin, onNavigateHome }: RegisterPagePr
   };
 
   return (
-    <main className="auth-page relative min-h-screen overflow-hidden bg-[#f1eee7] text-[#24211f]">
-      {/* Header */}
-      <header className="border-b border-black/[0.07] bg-[#f8f5ee]/80 backdrop-blur-md">
-        <div className="mx-auto flex h-[78px] max-w-6xl items-center justify-between px-6 lg:px-10">
+    <main
+      className="auth-page relative min-h-screen overflow-hidden flex flex-col w-full"
+      style={{ backgroundColor: colors.light.background, color: colors.light['text-main'] }}
+    >
+      {/* Background Orbs / Decorators em largura total */}
+      <div aria-hidden="true" className="hero-grid pointer-events-none absolute inset-0 opacity-50 w-full" />
+      <div aria-hidden="true" className="hero-orb pointer-events-none absolute left-[-10%] top-20 size-[380px] rounded-full bg-[#e9e0c7]/45 blur-3xl" />
+      <div aria-hidden="true" className="hero-orb pointer-events-none absolute right-[-8%] top-[28%] size-[300px] rounded-full bg-[#e6c66d]/20 blur-3xl" />
+
+      {/* Header com padding alinhado */}
+      <header
+        className="sticky top-0 left-0 right-0 z-[9999] border-b backdrop-blur-2xl shadow-sm shrink-0 w-full"
+        style={{ backgroundColor: `${colors.light.background}f2`, borderColor: colors.light.border }}
+      >
+        <div className="mx-auto flex h-[78px] max-w-[1440px] items-center justify-between px-6 lg:px-12 w-full">
           <button
             type="button"
             onClick={onNavigateHome}
-            className="flex items-center gap-2 text-[21px] font-extrabold tracking-[-0.06em] cursor-pointer"
+            className="flex items-center gap-2.5 text-[21px] font-extrabold tracking-[-0.05em] cursor-pointer group border-0 bg-transparent p-0"
+            style={{ color: colors.light['text-main'] }}
           >
-            <img src="/mascot.png" alt="SpellBinder Mascot" className="size-10 object-contain" />
+            <div
+              className="relative flex size-10 items-center justify-center rounded-[11px] border-2 p-1 shadow-[3px_3px_0_#171513] group-hover:scale-105 transition-transform overflow-hidden"
+              style={{ backgroundColor: colors.light.background, borderColor: colors.light['text-main'] }}
+            >
+              <img src="/mascot.png" alt="SpellBinder Logo" className="w-full h-full object-contain" />
+            </div>
             <span>SpellBinder</span>
           </button>
-          <p className="text-sm text-[#77706a]">
+          <p className="text-sm" style={{ color: colors.light['text-muted'] }}>
             Já tem uma conta?{' '}
             <button
               type="button"
               onClick={onNavigateLogin}
-              className="font-bold text-[#9b7130] hover:underline cursor-pointer ml-1"
+              className="font-bold hover:underline cursor-pointer ml-1"
+              style={{ color: colors.light.bronze }}
             >
               Entrar
             </button>
@@ -48,100 +67,113 @@ export function RegisterPage({ onNavigateLogin, onNavigateHome }: RegisterPagePr
         </div>
       </header>
 
-      {/* Back link */}
-      <button
-        type="button"
-        onClick={onNavigateHome}
-        className="auth-back-link absolute left-6 top-[94px] z-20 lg:left-10 cursor-pointer"
-      >
-        <span aria-hidden="true">←</span> Voltar para início
-      </button>
-
-      {/* Background Decorators */}
-      <div aria-hidden="true" className="auth-decoration auth-decoration-one" />
-      <div aria-hidden="true" className="auth-decoration auth-decoration-two" />
-
-      {/* Main Grid */}
-      <div className="relative z-10 mx-auto grid min-h-[calc(100vh-78px)] max-w-6xl items-center gap-16 px-6 py-16 lg:grid-cols-[0.85fr_1fr] lg:px-10 animate-fade-in-up">
+      {/* Main Grid centralizado (max-w-6xl com respiro lateral elegante) */}
+      <div className="relative z-10 mx-auto w-full max-w-6xl grid flex-1 items-center gap-12 px-6 lg:grid-cols-[0.85fr_1fr] lg:px-10 pt-4 pb-8 my-auto">
         {/* Left Branding */}
         <section className="hidden lg:block">
-          <p className="mb-5 text-xs font-bold uppercase tracking-[0.2em] text-[#9b7130]">Comece gratuitamente</p>
-          <h1 className="max-w-lg text-6xl font-extrabold leading-[0.94] tracking-[-0.065em]">
+          <button
+            type="button"
+            onClick={onNavigateHome}
+            className="mb-6 text-sm font-medium transition-colors cursor-pointer inline-flex items-center gap-1.5 border-0 bg-transparent p-0 hover:text-black"
+            style={{ color: colors.light['text-muted'] }}
+          >
+            <span aria-hidden="true">←</span> Voltar para início
+          </button>
+          <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em]" style={{ color: colors.light.bronze }}>Comece gratuitamente</p>
+          <h1 className="max-w-lg text-6xl font-black leading-[0.94] tracking-[-0.065em]" style={{ color: colors.light['text-main'] }}>
             Sua coleção merece um lugar à altura.
           </h1>
-          <p className="mt-7 max-w-md text-lg leading-8 text-[#77706a]">
+          <p className="mt-6 max-w-md text-lg leading-7" style={{ color: colors.light['text-muted'] }}>
             Crie seu fichário digital, acompanhe suas cartas e monte decks usando todo o universo de Magic.
           </p>
-          <div className="mt-10 h-px w-24 bg-[#9b7130]" />
+          <div className="mt-8 h-px w-24" style={{ backgroundColor: colors.light.bronze }} />
         </section>
 
         {/* Right Register Form */}
-        <section className="w-full max-w-md justify-self-end">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.18em] text-[#9b7130]">Seu próximo deck começa aqui</p>
-          <h2 className="text-4xl font-extrabold tracking-[-0.055em]">Crie sua conta</h2>
-          <p className="mt-3 text-sm leading-6 text-[#77706a]">Organize suas cartas e transforme ideias em decks.</p>
+        <section
+          className="w-full max-w-md justify-self-end backdrop-blur-md px-8 py-6 rounded-[28px] shadow-[0_20px_50px_rgba(70,57,39,0.08)] border"
+          style={{ backgroundColor: `${colors.light.surface}cc`, borderColor: colors.light.border }}
+        >
+          <div className="lg:hidden mb-4">
+            <button
+              type="button"
+              onClick={onNavigateHome}
+              className="text-xs font-medium transition-colors cursor-pointer inline-flex items-center gap-1 border-0 bg-transparent p-0 hover:text-black"
+              style={{ color: colors.light['text-muted'] }}
+            >
+              <span aria-hidden="true">←</span> Voltar para início
+            </button>
+          </div>
+          <p className="mb-1.5 text-xs font-bold uppercase tracking-[0.18em]" style={{ color: colors.light.bronze }}>Seu próximo deck começa aqui</p>
+          <h2 className="text-3xl sm:text-4xl font-black tracking-[-0.055em]" style={{ color: colors.light['text-main'] }}>Crie sua conta</h2>
+          <p className="mt-1.5 text-sm" style={{ color: colors.light['text-muted'] }}>Organize suas cartas e transforme ideias em decks.</p>
 
           {/* Social Logins */}
-          <div className="mt-8 grid gap-3 sm:grid-cols-2">
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
             <button
               type="button"
               onClick={onNavigateLogin}
-              className="auth-provider-button"
+              className="flex items-center justify-center gap-2.5 p-2.5 rounded-full text-sm font-semibold transition-colors cursor-pointer shadow-xs border"
+              style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border, color: colors.light['text-main'] }}
             >
-              <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/google/default.svg" alt="Google" aria-hidden="true" />
-              <span>Continuar com Google</span>
+              <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/google/default.svg" alt="Google" aria-hidden="true" className="size-4" />
+              <span>Google</span>
             </button>
             <button
               type="button"
               onClick={onNavigateLogin}
-              className="auth-provider-button"
+              className="flex items-center justify-center gap-2.5 p-2.5 rounded-full text-sm font-semibold transition-colors cursor-pointer shadow-xs border"
+              style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border, color: colors.light['text-main'] }}
             >
-              <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/apple/mono.svg" alt="Apple" aria-hidden="true" />
-              <span>Continuar com Apple</span>
+              <img src="https://cdn.jsdelivr.net/gh/glincker/thesvg@main/public/icons/apple/mono.svg" alt="Apple" aria-hidden="true" className="size-4" />
+              <span>Apple</span>
             </button>
           </div>
 
           {/* Divider */}
-          <div className="my-8 flex items-center gap-4 text-xs text-[#a29b94]">
+          <div className="my-5 flex items-center gap-4 text-xs" style={{ color: colors.light['text-faint'] }}>
             <span className="h-px flex-1 bg-black/10" />
             <span>ou cadastre seu e-mail</span>
             <span className="h-px flex-1 bg-black/10" />
           </div>
 
           {/* Registration Form */}
-          <form onSubmit={handleSubmit} className="space-y-5">
-            <label className="block text-sm font-semibold text-[#24211f]">
+          <form onSubmit={handleSubmit} className="space-y-3">
+            <label className="block text-sm font-semibold" style={{ color: colors.light['text-main'] }}>
               Nome
               <input
                 type="text"
                 placeholder="Como quer ser chamado?"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="mt-2 h-12 w-full border-0 border-b border-black/20 bg-transparent px-0 outline-none transition placeholder:text-[#aaa39b] focus:border-[#9b7130] focus:ring-0"
+                className="mt-1 h-9 w-full border-0 border-b bg-transparent px-0 text-sm outline-none transition focus:ring-0"
+                style={{ borderColor: 'rgba(36, 33, 31, 0.25)', color: colors.light['text-main'] }}
                 required
               />
             </label>
 
-            <label className="block text-sm font-semibold text-[#24211f]">
+            <label className="block text-sm font-semibold" style={{ color: colors.light['text-main'] }}>
               E-mail
               <input
                 type="email"
                 placeholder="voce@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-2 h-12 w-full border-0 border-b border-black/20 bg-transparent px-0 outline-none transition placeholder:text-[#aaa39b] focus:border-[#9b7130] focus:ring-0"
+                className="mt-1 h-9 w-full border-0 border-b bg-transparent px-0 text-sm outline-none transition focus:ring-0"
+                style={{ borderColor: 'rgba(36, 33, 31, 0.25)', color: colors.light['text-main'] }}
                 required
               />
             </label>
 
-            <label className="block text-sm font-semibold text-[#24211f]">
+            <label className="block text-sm font-semibold" style={{ color: colors.light['text-main'] }}>
               Senha
               <input
                 type="password"
                 placeholder="Crie uma senha forte"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-2 h-12 w-full border-0 border-b border-black/20 bg-transparent px-0 outline-none transition placeholder:text-[#aaa39b] focus:border-[#9b7130] focus:ring-0 font-mono"
+                className="mt-1 h-9 w-full border-0 border-b bg-transparent px-0 text-sm outline-none transition focus:ring-0"
+                style={{ borderColor: 'rgba(36, 33, 31, 0.25)', color: colors.light['text-main'] }}
                 required
               />
             </label>
@@ -149,13 +181,14 @@ export function RegisterPage({ onNavigateLogin, onNavigateHome }: RegisterPagePr
             <button
               type="submit"
               disabled={loading}
-              className="h-12 w-full rounded-full bg-[#171513] font-semibold text-white transition hover:bg-[#2a2623] cursor-pointer"
+              className="mt-2 h-11 w-full rounded-full text-sm font-semibold text-white transition cursor-pointer shadow-[0_4px_0_#d8d4cc,0_10px_24px_rgba(36,33,31,0.12)] border-0"
+              style={{ backgroundColor: colors.light.dark }}
             >
               {loading ? 'Criando conta...' : 'Criar minha conta'}
             </button>
           </form>
 
-          <p className="mt-8 text-sm text-[#77706a]">
+          <p className="mt-3.5 text-xs text-center" style={{ color: colors.light['text-muted'] }}>
             Ao continuar, você concorda com nossos termos de uso.
           </p>
         </section>

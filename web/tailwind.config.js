@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+import { colors } from './src/styles/colors';
+
 export default {
   content: [
     "./index.html",
@@ -8,6 +10,27 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Cores semânticas dinâmicas do SpellBinder (Light / Dark)
+        "spell-bg": colors.light.background,
+        "spell-surface": colors.light.surface,
+        "spell-main": colors.light['text-main'],
+        "spell-muted": colors.light['text-muted'],
+        "spell-gold": colors.light.gold,
+        "spell-bronze": colors.light.bronze,
+        "spell-border": colors.light.border,
+
+        // Paleta Dark Mode específica
+        "spell-dark-bg": colors.dark.background,
+        "spell-dark-surface": colors.dark.surface,
+        "spell-dark-alt": colors.dark['surface-alt'],
+        "spell-dark-elevated": colors.dark['surface-elevated'],
+        "spell-dark-text": colors.dark['text-main'],
+        "spell-dark-muted": colors.dark['text-muted'],
+        "spell-dark-gold": colors.dark.gold,
+        "spell-dark-gold-hover": colors.dark['gold-hover'],
+        "spell-dark-border": colors.dark.border,
+
+        // Suas cores originais mantidas integralmente
         "on-primary-container": "#92807d",
         "surface": "#faf9f3",
         "surface-tint": "#6b5b58",

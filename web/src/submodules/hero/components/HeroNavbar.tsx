@@ -1,56 +1,67 @@
 interface HeroNavbarProps {
   onNavigateLogin?: () => void;
   onNavigateRegister?: () => void;
+  onNavigateHome?: () => void;
 }
 
-export function HeroNavbar({ onNavigateLogin, onNavigateRegister }: HeroNavbarProps) {
+export function HeroNavbar({ onNavigateLogin, onNavigateRegister, onNavigateHome }: HeroNavbarProps) {
   return (
-    <header className="z-50 w-full h-14 bg-[#0e0e11]/85 backdrop-blur-2xl border-b border-white/5 flex-shrink-0">
-      <div className="w-full h-full px-6 flex items-center justify-between">
+    <header className="fixed top-0 left-0 right-0 z-[9999] h-[78px] bg-spell-bg/95 backdrop-blur-2xl border-b border-spell-border/60 shadow-sm flex-shrink-0">
+      <div className="mx-auto h-full max-w-[1440px] px-6 lg:px-10 flex items-center justify-between">
+
         {/* Logo */}
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 flex items-center justify-center flex-shrink-0">
-            <img src="/logo.png" alt="DeckTracker Logo" className="w-full h-full object-contain filter drop-shadow-[0_0_8px_rgba(128,131,255,0.4)]" />
+        <button
+          type="button"
+          onClick={onNavigateHome}
+          className="flex items-center gap-2.5 text-[21px] font-extrabold tracking-[-0.05em] text-spell-main cursor-pointer group border-0 bg-transparent p-0"
+        >
+          <div className="relative flex size-10 items-center justify-center rounded-[11px] border-2 border-spell-main bg-spell-bg p-1 shadow-[3px_3px_0_#171513] group-hover:scale-105 transition-transform overflow-hidden">
+            <img src="/mascot.png" alt="SpellBinder Logo" className="w-full h-full object-contain" />
           </div>
-          <span className="font-bold text-base tracking-wider text-[#e4e1e6]">DECKTRACKER</span>
-          <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-[#2a2a2d] text-[#c0c1ff]">MTG</span>
-        </div>
+          <span>SpellBinder</span>
+        </button>
 
         {/* Links Centrais */}
-        <nav className="hidden lg:flex items-center gap-2 p-1 rounded-full bg-[#1b1b1e]/70 border border-white/5">
-          <a href="#matrix" className="px-3 py-1 bg-[#2a2a2d] text-[#e4e1e6] font-medium text-xs rounded-full">
-            Matriz de Comandantes
+        <nav aria-label="Navegação principal" className="hidden lg:flex items-center gap-2 p-1 rounded-full bg-spell-surface-alt border border-spell-border">
+          <a href="#inicio" className="px-3.5 py-1.5 bg-spell-surface text-spell-main font-bold text-xs rounded-full shadow-xs">
+            Início
           </a>
-          <a href="#meta" className="px-3 py-1 text-xs text-[#c7c4d7] hover:text-white transition-colors">
-            Panorama do Meta
+          <a href="#colecao" className="px-3.5 py-1.5 text-xs text-spell-muted hover:text-spell-main transition-colors font-medium">
+            Coleção Física
           </a>
-          <a href="#scryfall" className="px-3 py-1 text-xs text-[#c7c4d7] hover:text-white transition-colors">
-            Motor Scryfall
+          <a href="#deckbuilder" className="px-3.5 py-1.5 text-xs text-spell-muted hover:text-spell-main transition-colors font-medium">
+            Deckbuilder
           </a>
-          <a href="#pricing" className="px-3 py-1 text-xs text-[#c7c4d7] hover:text-white transition-colors">
-            Planos
+          <a href="#como-funciona" className="px-3.5 py-1.5 text-xs text-spell-muted hover:text-spell-main transition-colors font-medium">
+            Como funciona
           </a>
         </nav>
 
         {/* Botões da Direita */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <button
             type="button"
             onClick={onNavigateRegister}
-            className="text-xs font-semibold text-[#c7c4d7] hover:text-white px-2 py-1 transition-colors cursor-pointer"
+            className="hidden sm:block text-[14px] font-medium text-spell-muted transition-colors hover:text-spell-main cursor-pointer"
           >
-            Criar conta
+            Registre-se
           </button>
 
           <button
             type="button"
             onClick={onNavigateLogin}
-            className="inline-flex items-center gap-1.5 text-xs font-bold bg-[#c0c1ff] text-[#1000a9] px-4 py-1.5 rounded-full hover:bg-white transition-all shadow-sm cursor-pointer"
+            className="group inline-flex h-11 items-center gap-3 rounded-full bg-spell-dark pl-5 pr-2 text-[14px] font-semibold text-white shadow-[0_4px_0_#d8d4cc,0_10px_24px_rgba(36,33,31,0.12)] transition-all hover:-translate-y-0.5 hover:bg-spell-dark-hover cursor-pointer"
           >
-            Entrar →
+            <span>Entrar</span>
+            <span aria-hidden="true" className="flex size-7 items-center justify-center rounded-full bg-white text-spell-dark transition-transform group-hover:translate-x-0.5">
+              →
+            </span>
           </button>
         </div>
+
       </div>
     </header>
   );
 }
+
+export default HeroNavbar;

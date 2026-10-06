@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { colors } from '../../../styles/colors'; // Ajuste o caminho se necessário para o seu projeto
 
 export function HeroCardShowcase() {
   const [cardImage, setCardImage] = useState<string>('');
@@ -27,10 +28,16 @@ export function HeroCardShowcase() {
     <div className="relative w-full max-w-[620px] min-w-[460px] mx-auto select-none my-auto">
 
       {/* 1. HUD DA CURVA DE IDENTIDADE DE MANA */}
-      <div className="absolute -top-12 -left-10 z-30 w-72 p-3.5 rounded-2xl bg-[#0e0e11]/95 border border-white/10 backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.85)] flex flex-col gap-2">
+      <div
+        className="absolute -top-12 -left-10 z-30 w-72 p-3.5 rounded-2xl border backdrop-blur-2xl shadow-[0_16px_36px_rgba(0,0,0,0.85)] flex flex-col gap-2"
+        style={{
+          backgroundColor: '#0e0e11f2',
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+        }}
+      >
         <div className="flex justify-between items-center text-xs text-[#c7c4d7]">
           <span className="font-bold uppercase tracking-wider text-[11px]">Curva de Identidade de Mana</span>
-          <span className="font-mono text-[#7bd0ff] font-bold text-xs">CMC 2.14</span>
+          <span className="font-mono font-bold text-xs" style={{ color: colors.light.gold }}>CMC 2.14</span>
         </div>
 
         {/* Barras de Mana WUBRG */}
@@ -72,12 +79,18 @@ export function HeroCardShowcase() {
           <span>•</span>
           <span>12 Pedras de Mana</span>
           <span>•</span>
-          <span className="text-[#7bd0ff] font-bold">98.2% Manter</span>
+          <span className="font-bold" style={{ color: colors.light.gold }}>98.2% Manter</span>
         </div>
       </div>
 
       {/* 2. CARD CENTRAL DA ATRAXA */}
-      <div className="relative z-20 w-full rounded-2xl p-4 sm:p-5 bg-[#141418]/95 border border-white/10 backdrop-blur-2xl shadow-[0_24px_64px_rgba(0,0,0,0.95)] flex flex-col gap-3">
+      <div
+        className="relative z-20 w-full rounded-2xl p-4 sm:p-5 border backdrop-blur-2xl shadow-[0_24px_64px_rgba(0,0,0,0.95)] flex flex-col gap-3"
+        style={{
+          backgroundColor: '#141418f2',
+          borderColor: 'rgba(255, 255, 255, 0.1)',
+        }}
+      >
 
         {/* Cabeçalho do Card */}
         <div className="flex items-center justify-between px-1">
@@ -176,3 +189,5 @@ export function HeroCardShowcase() {
     </div>
   );
 }
+
+export default HeroCardShowcase;
