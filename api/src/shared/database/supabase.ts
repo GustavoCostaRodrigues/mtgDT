@@ -33,3 +33,6 @@ export const createDbClient = (userJwt?: string) => {
         ...options,
     });
 };
+
+export const supabase = createDbClient('');
+export default supabase;

@@ -3,24 +3,24 @@ import { Router } from 'express';
 import { 
   handleImportCard,
   handleSearchCards, 
-  handleGetCardById 
+  handleGetCardBySlug,
+  handleGetCardById,
 } from './cards.controller.js';
 
 const cardsRouter = Router();
 
 // --- CREATE ------------------------------------------------------------------
+// POST /api/cards - Importar e cadastrar carta
 cardsRouter.post('/', handleImportCard);
 
 // --- READ --------------------------------------------------------------------
-cardsRouter.get('/search', handleSearchCards);
-cardsRouter.get('/:id', handleGetCardById);
-
-// --- READ --------------------------------------------------------------------
-
-// GET /api/cards/search - Pesquisar cartas
+// 1. GET /api/cards/search?q=termo - Busca rápida / Autocomplete (registrada ANTES de :slug)
 cardsRouter.get('/search', handleSearchCards);
 
-// GET /api/cards/:id - Detalhes da carta
-cardsRouter.get('/:id', handleGetCardById);
+// GET /api/cards/id/:id - Detalhes por ID numérico direto (compatibilidade)
+cardsRouter.get('/id/:id', handleGetCardById);
+
+// 2. GET /api/cards/:slug - Detalhes completos da carta por slug
+cardsRouter.get('/:slug', handleGetCardBySlug);
 
 export { cardsRouter };

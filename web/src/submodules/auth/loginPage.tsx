@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { colors } from '../../styles/colors';
+import { AuthNavbar } from './AuthNavbar';
+import { setStoredUser } from './authStorage';
 
 interface LoginPageProps {
   onLoginSuccess?: () => void;
@@ -10,17 +12,65 @@ interface LoginPageProps {
 export function LoginPage({ onLoginSuccess, onNavigateRegister, onNavigateHome }: LoginPageProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [rememberEmail, setRememberEmail] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  useEffect(() => {
+    const savedEmail = localStorage.getItem('saved_email');
+    if (savedEmail) {
+      setEmail(savedEmail);
+      setRememberEmail(true);
+    }
+  }, []);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
+
+    if (rememberEmail) {
+      localStorage.setItem('saved_email', email);
+    } else {
+      localStorage.removeItem('saved_email');
+    }
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.user) {
+          setStoredUser({
+            name: data.user.name || email.split('@')[0],
+            email: data.user.email || email,
+            avatarUrl: data.user.avatarUrl || '/mascot.png',
+          });
+        }
+        if (data.session?.accessToken) {
+          localStorage.setItem('spellbinder_token', data.session.accessToken);
+        }
+      } else {
+        const cleanName = email.split('@')[0];
+        setStoredUser({
+          name: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
+          email,
+        });
+      }
+    } catch {
+      const cleanName = email.split('@')[0];
+      setStoredUser({
+        name: cleanName.charAt(0).toUpperCase() + cleanName.slice(1),
+        email,
+      });
+    } finally {
       setLoading(false);
       if (onLoginSuccess) {
         onLoginSuccess();
       }
-    }, 400);
+    }
   };
 
   return (
@@ -28,73 +78,47 @@ export function LoginPage({ onLoginSuccess, onNavigateRegister, onNavigateHome }
       className="auth-page relative min-h-screen overflow-hidden flex flex-col w-full"
       style={{ backgroundColor: colors.light.background, color: colors.light['text-main'] }}
     >
-      {/* Background Orbs / Decorators em largura total */}
+      {/* Background Orbs */}
       <div aria-hidden="true" className="hero-grid pointer-events-none absolute inset-0 opacity-50 w-full" />
-      <div aria-hidden="true" className="hero-orb pointer-events-none absolute left-[-10%] top-20 size-[380px] rounded-full bg-[#e9e0c7]/45 blur-3xl" />
-      <div aria-hidden="true" className="hero-orb pointer-events-none absolute right-[-8%] top-[28%] size-[300px] rounded-full bg-[#e6c66d]/20 blur-3xl" />
+      <div aria-hidden="true" className="hero-orb pointer-events-none absolute left-[-5%] top-20 size-[420px] rounded-full bg-[#e9e0c7]/45 blur-3xl" />
+      <div aria-hidden="true" className="hero-orb pointer-events-none absolute right-[-5%] top-[25%] size-[380px] rounded-full bg-[#e6c66d]/20 blur-3xl" />
 
-      {/* Top Header com padding alinhado */}
-      <header
-        className="sticky top-0 left-0 right-0 z-[9999] border-b backdrop-blur-2xl shadow-sm shrink-0 w-full"
-        style={{ backgroundColor: `${colors.light.background}f2`, borderColor: colors.light.border }}
-      >
-        <div className="mx-auto flex h-[78px] max-w-[1440px] items-center justify-between px-6 lg:px-12 w-full">
-          <button
-            type="button"
-            onClick={onNavigateHome}
-            className="flex items-center gap-2.5 text-[21px] font-extrabold tracking-[-0.05em] cursor-pointer group border-0 bg-transparent p-0"
-            style={{ color: colors.light['text-main'] }}
-          >
-            <div
-              className="relative flex size-10 items-center justify-center rounded-[11px] border-2 p-1 shadow-[3px_3px_0_#171513] group-hover:scale-105 transition-transform overflow-hidden"
-              style={{ backgroundColor: colors.light.background, borderColor: colors.light['text-main'] }}
-            >
-              <img src="/mascot.png" alt="SpellBinder Logo" className="w-full h-full object-contain" />
-            </div>
-            <span>SpellBinder</span>
-          </button>
-          <p className="text-sm" style={{ color: colors.light['text-muted'] }}>
-            Ainda não tem uma conta?{' '}
-            <button
-              type="button"
-              onClick={onNavigateRegister}
-              className="font-bold hover:underline cursor-pointer ml-1"
-              style={{ color: colors.light.bronze }}
-            >
-              Registre-se
-            </button>
-          </p>
-        </div>
-      </header>
+      {/* Top Header Compartilhado */}
+      <AuthNavbar
+        onNavigateHome={onNavigateHome}
+        rightActionPrompt="Ainda não tem uma conta?"
+        rightActionText="Registre-se"
+        onRightActionClick={onNavigateRegister}
+      />
 
-      {/* Page Layout Container centralizado (max-w-6xl com respiro lateral elegante) */}
-      <div className="relative z-10 mx-auto w-full max-w-6xl grid flex-1 items-center gap-12 px-6 lg:grid-cols-[0.85fr_1fr] lg:px-10 pt-4 pb-8 my-auto">
+      {/* Container Principal Expandido (max-w-[1440px] com grid de duas colunas balanceadas) */}
+      <div className="relative z-10 mx-auto w-full max-w-[1440px] grid flex-1 items-center gap-16 px-6 lg:grid-cols-2 lg:px-16 py-12 my-auto">
         {/* Left Welcome Content */}
-        <section className="hidden lg:block">
+        <section className="hidden lg:block max-w-xl">
           <button
             type="button"
             onClick={onNavigateHome}
-            className="mb-6 text-sm font-medium transition-colors cursor-pointer inline-flex items-center gap-1.5 border-0 bg-transparent p-0 hover:text-black"
+            className="mb-8 text-sm font-medium transition-colors cursor-pointer inline-flex items-center gap-1.5 border-0 bg-transparent p-0 hover:text-black"
             style={{ color: colors.light['text-muted'] }}
           >
             <span aria-hidden="true">←</span> Voltar para início
           </button>
           <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em]" style={{ color: colors.light.bronze }}>Bem-vindo de volta</p>
-          <h1 className="max-w-lg text-6xl font-black leading-[0.94] tracking-[-0.065em]" style={{ color: colors.light['text-main'] }}>
+          <h1 className="text-6xl xl:text-7xl font-black leading-[0.94] tracking-[-0.065em]" style={{ color: colors.light['text-main'] }}>
             Volte para a mesa com tudo no lugar.
           </h1>
-          <p className="mt-6 max-w-md text-lg leading-7" style={{ color: colors.light['text-muted'] }}>
+          <p className="mt-6 text-lg leading-relaxed max-w-lg" style={{ color: colors.light['text-muted'] }}>
             Encontre suas cartas, monte seus decks e saiba exatamente o que já faz parte da sua coleção física.
           </p>
           <div className="mt-8 h-px w-24" style={{ backgroundColor: colors.light.bronze }} />
         </section>
 
-        {/* Right Form Card */}
+        {/* Right Form Card (Alinhado à direita com largura ideal) */}
         <section
-          className="w-full max-w-md justify-self-end backdrop-blur-md px-8 py-6 rounded-[28px] shadow-[0_20px_50px_rgba(70,57,39,0.08)] border"
+          className="w-full max-w-md justify-self-center lg:justify-self-end backdrop-blur-md px-8 py-8 rounded-[28px] shadow-[0_20px_50px_rgba(70,57,39,0.08)] border"
           style={{ backgroundColor: `${colors.light.surface}cc`, borderColor: colors.light.border }}
         >
-          <div className="lg:hidden mb-4">
+          <div className="lg:hidden mb-6">
             <button
               type="button"
               onClick={onNavigateHome}
@@ -109,7 +133,7 @@ export function LoginPage({ onLoginSuccess, onNavigateRegister, onNavigateHome }
           <p className="mt-1.5 text-sm" style={{ color: colors.light['text-muted'] }}>Continue organizando sua coleção e construindo decks.</p>
 
           {/* Social Logins */}
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+          <div className="mt-6 grid gap-3 sm:grid-cols-2">
             <button
               type="button"
               onClick={onLoginSuccess}
@@ -131,14 +155,14 @@ export function LoginPage({ onLoginSuccess, onNavigateRegister, onNavigateHome }
           </div>
 
           {/* Divider */}
-          <div className="my-5 flex items-center gap-4 text-xs" style={{ color: colors.light['text-faint'] }}>
+          <div className="my-6 flex items-center gap-4 text-xs" style={{ color: colors.light['text-faint'] }}>
             <span className="h-px flex-1 bg-black/10" />
             <span>ou entre com e-mail</span>
             <span className="h-px flex-1 bg-black/10" />
           </div>
 
           {/* Login Form */}
-          <form onSubmit={handleSubmit} className="space-y-3.5">
+          <form onSubmit={handleSubmit} className="space-y-4">
             <label className="block text-sm font-semibold" style={{ color: colors.light['text-main'] }}>
               E-mail
               <input
@@ -146,7 +170,7 @@ export function LoginPage({ onLoginSuccess, onNavigateRegister, onNavigateHome }
                 placeholder="voce@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="mt-1 h-10 w-full border-0 border-b bg-transparent px-0 text-sm outline-none transition focus:ring-0"
+                className="mt-1.5 h-10 w-full border-0 border-b bg-transparent px-0 text-sm outline-none transition focus:ring-0"
                 style={{ borderColor: 'rgba(36, 33, 31, 0.25)', color: colors.light['text-main'] }}
                 required
               />
@@ -159,13 +183,36 @@ export function LoginPage({ onLoginSuccess, onNavigateRegister, onNavigateHome }
                 placeholder="Sua senha"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="mt-1 h-10 w-full border-0 border-b bg-transparent px-0 text-sm outline-none transition focus:ring-0"
+                className="mt-1.5 h-10 w-full border-0 border-b bg-transparent px-0 text-sm outline-none transition focus:ring-0"
                 style={{ borderColor: 'rgba(36, 33, 31, 0.25)', color: colors.light['text-main'] }}
                 required
               />
             </label>
 
-            <div className="flex justify-end pt-0.5">
+            {/* Opções */}
+            <div className="space-y-2.5 pt-1">
+              <label className="flex items-center gap-2.5 text-xs font-medium cursor-pointer" style={{ color: colors.light['text-muted'] }}>
+                <input
+                  type="checkbox"
+                  checked={rememberEmail}
+                  onChange={(e) => setRememberEmail(e.target.checked)}
+                  className="rounded border-gray-300 text-black focus:ring-0 cursor-pointer size-4"
+                />
+                Lembrar e-mail neste dispositivo
+              </label>
+
+              <label className="flex items-center gap-2.5 text-xs font-medium cursor-pointer" style={{ color: colors.light['text-muted'] }}>
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="rounded border-gray-300 text-black focus:ring-0 cursor-pointer size-4"
+                />
+                Manter conectado por 30 dias
+              </label>
+            </div>
+
+            <div className="flex justify-end pt-1">
               <button
                 type="button"
                 onClick={(e) => e.preventDefault()}
@@ -179,7 +226,7 @@ export function LoginPage({ onLoginSuccess, onNavigateRegister, onNavigateHome }
             <button
               type="submit"
               disabled={loading}
-              className="mt-1 h-11 w-full rounded-full text-sm font-semibold text-white transition cursor-pointer shadow-[0_4px_0_#d8d4cc,0_10px_24px_rgba(36,33,31,0.12)] border-0"
+              className="mt-2 h-11 w-full rounded-full text-sm font-semibold text-white transition cursor-pointer shadow-[0_4px_0_#d8d4cc,0_10px_24px_rgba(36,33,31,0.12)] border-0"
               style={{ backgroundColor: colors.light.dark }}
             >
               {loading ? 'Entrando...' : 'Entrar'}

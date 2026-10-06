@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { HeroPage } from './submodules/hero/HeroPage';
 import { LoginPage } from './submodules/auth/loginPage';
 import { RegisterPage } from './submodules/auth/RegisterPage';
@@ -11,20 +11,55 @@ type Page = 'hero' | 'login' | 'register' | 'dashboard' | 'minha-colecao' | 'car
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('hero');
-  const [selectedCardSlug, setSelectedCardSlug] = useState('rhystic-study');
+  const [selectedCardSlug, setSelectedCardSlug] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Sincroniza a página e o card selecionado com a URL atual
+  useEffect(() => {
+    const syncRouteFromUrl = () => {
+      const pathname = window.location.pathname;
+      const search = window.location.search;
+      const params = new URLSearchParams(search);
+      const cardSlug = params.get('card');
+
+      if (pathname === '/buscar-cartas') {
+        setCurrentPage('buscar-cartas');
+        if (cardSlug) {
+          setSelectedCardSlug(cardSlug);
+        }
+      } else if (pathname === '/minha-colecao' || pathname === '/colecao') {
+        setCurrentPage('minha-colecao');
+      } else if (pathname === '/dashboard') {
+        setCurrentPage('dashboard');
+      }
+    };
+
+    syncRouteFromUrl();
+    window.addEventListener('popstate', syncRouteFromUrl);
+    return () => window.removeEventListener('popstate', syncRouteFromUrl);
+  }, []);
+
   const handleNavigate = (href: string) => {
-    if (href === '#minha-colecao' || href === '/minha-colecao' || href === '#colecao') {
+    const [path, search] = href.split('?');
+    const params = new URLSearchParams(search || '');
+    const cardSlug = params.get('card');
+
+    if (path === '#minha-colecao' || path === '/minha-colecao' || path === '#colecao' || path === '/colecao') {
       setCurrentPage('minha-colecao');
+      window.history.pushState({}, '', href);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (href === '/buscar-cartas' || href === '#buscar-cartas') {
+    } else if (path === '/buscar-cartas' || path === '#buscar-cartas') {
       setCurrentPage('buscar-cartas');
+      if (cardSlug) {
+        setSelectedCardSlug(cardSlug);
+      }
+      window.history.pushState({}, '', href);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (href === '#visao-geral' || href === '/' || href === '/dashboard') {
+    } else if (path === '#visao-geral' || path === '/' || path === '/dashboard') {
       setCurrentPage('dashboard');
+      window.history.pushState({}, '', href);
       window.scrollTo({ top: 0, behavior: 'smooth' });
-    } else if (href === '#deckbuilder' || href === '/decks' || href === '#decks' || href === '/deckbuilder') {
+    } else if (path === '#deckbuilder' || path === '/decks' || path === '#decks' || path === '/deckbuilder') {
       setCurrentPage('dashboard');
       setTimeout(() => {
         const el = document.getElementById('deckbuilder') || document.getElementById('decks');
@@ -32,7 +67,7 @@ export default function App() {
           el.scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
       }, 50);
-    } else if (href === '#lista-de-desejos' || href === '/desejos') {
+    } else if (path === '#lista-de-desejos' || path === '/desejos' || path === '/wishlist') {
       setCurrentPage('dashboard');
       setTimeout(() => {
         const el = document.getElementById('lista-de-desejos');
@@ -76,13 +111,11 @@ export default function App() {
         return (
           <BuscarCartasPage
             initialQuery={searchQuery}
+            cardSlug={selectedCardSlug}
+            onClearSelectedCard={() => setSelectedCardSlug('')}
             onLogout={() => setCurrentPage('hero')}
             onNavigate={handleNavigate}
             onSearch={handleSearchFromNav}
-            onSelectCard={(slug) => {
-              setSelectedCardSlug(slug);
-              setCurrentPage('carta');
-            }}
           />
         );
       case 'carta':

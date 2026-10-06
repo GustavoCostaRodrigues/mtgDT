@@ -13,12 +13,72 @@ const navigationItems = [
   ['Explorar Base MTG', '#como-funciona'],
 ];
 
-const cards = [
-  { name: 'Black Lotus', set: 'Alpha · 1993', color: '#1c1815', accent: '#c8b08b' },
-  { name: 'Swords to Plowshares', set: 'Ice Age · 1995', color: '#c8d4d0', accent: '#5d847e' },
-  { name: 'Sol Ring', set: 'Commander', color: '#d2a451', accent: '#704d28' },
-  { name: 'Birds of Paradise', set: 'Ravnica', color: '#789866', accent: '#e9d5a4' },
+const catalogCards = [
+  {
+    name: 'Black Lotus',
+    set: 'Alpha · 1993',
+    image: 'https://cards.scryfall.io/normal/front/b/0/b0faa7f2-b547-42c4-a810-839da50dadfe.jpg?1783948669',
+  },
+  {
+    name: 'Swords to Plowshares',
+    set: 'Ice Age · 1995',
+    image: 'https://cards.scryfall.io/normal/front/3/7/375fd2cb-443b-4be4-ad60-6d1a8e74f510.jpg?1783947519',
+  },
+  {
+    name: 'Sol Ring',
+    set: 'Commander',
+    image: 'https://cards.scryfall.io/normal/front/7/1/71357a3d-9a9f-4ec6-8e01-1966b220206c.jpg?1783941155',
+  },
+  {
+    name: 'Birds of Paradise',
+    set: 'Ravnica',
+    image: 'https://cards.scryfall.io/normal/front/9/0/90a4396a-0f22-482b-ad1d-4d9b68a1ed96.jpg?1783943642',
+  },
 ];
+
+const deckbuilderCards = [
+  {
+    name: 'Atraxa, Grand Unifier',
+    image: 'https://cards.scryfall.io/normal/front/4/a/4a1f905f-1d55-4d02-9d24-e58070793d3f.jpg?1783918003',
+  },
+  {
+    name: 'Rhystic Study',
+    image: 'https://cards.scryfall.io/normal/front/9/f/9f37c5b6-a59c-45cd-9a99-e9357fe9ea1b.jpg?1783919146',
+  },
+  {
+    name: 'Demonic Tutor',
+    image: 'https://cards.scryfall.io/normal/front/a/2/a24b4cb6-cebb-428b-8654-74347a6a8d63.jpg?1783915679',
+  },
+  {
+    name: 'Doubling Season',
+    image: 'https://cards.scryfall.io/normal/front/f/2/f2c4f80e-84a0-463b-82c3-5c6503809351.jpg?1783909062',
+  },
+  {
+    name: "Teferi's Protection",
+    image: 'https://cards.scryfall.io/normal/front/4/8/483fa1cb-1e35-44f2-a143-98c0f107f5ca.jpg?1783921926',
+  },
+  {
+    name: 'Cyclonic Rift',
+    image: 'https://cards.scryfall.io/normal/front/d/f/dfb7c4b9-f2f4-4d4e-baf2-86551c8150fe.jpg?1783913339',
+  },
+  {
+    name: 'Smothering Tithe',
+    image: 'https://cards.scryfall.io/normal/front/8/6/861b5889-0183-4bee-afeb-a4b2aa700a8e.jpg?1783915712',
+  },
+  {
+    name: 'Mana Crypt',
+    image: 'https://cards.scryfall.io/normal/front/4/d/4d960186-4559-4af0-bd22-63baa15f8939.jpg?1783930103',
+  },
+  {
+    name: 'Force of Will',
+    image: 'https://cards.scryfall.io/normal/front/8/9/89f612d6-7c59-4a7b-a87d-45f789e88ba5.jpg?1789015964',
+  },
+  {
+    name: 'Vampiric Tutor',
+    image: 'https://cards.scryfall.io/normal/front/3/4/34a0203f-9cce-43a4-9cb7-8ce6647895cd.jpg?1783918468',
+  },
+];
+
 
 const formats = ['Commander', 'Pauper', 'Modern', 'Standard'];
 
@@ -188,10 +248,15 @@ export function HeroPage({ onNavigateLogin, onNavigateRegister, onNavigateDashbo
                   <span className="rounded-full bg-white px-3 py-2 text-[10px] font-bold text-[#5d5750] shadow-xs">1.248 cartas</span>
                 </div>
                 <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-                  {cards.map((card) => (
+                  {catalogCards.map((card) => (
                     <div key={card.name} className="group rounded-xl border border-black/10 bg-white p-2 shadow-xs transition-transform hover:-translate-y-1">
-                      <div className="flex aspect-[0.72] items-end rounded-lg p-2" style={{ background: `linear-gradient(145deg, ${card.color}, ${card.accent})` }}>
-                        <span className="text-[10px] font-bold text-white drop-shadow-md">{card.name}</span>
+                      <div className="relative aspect-[0.72] w-full overflow-hidden rounded-lg bg-[#201d1a]/5">
+                        <img
+                          src={card.image}
+                          alt={card.name}
+                          loading="lazy"
+                          className="h-full w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+                        />
                       </div>
                       <p className="mt-2 truncate text-[10px] font-bold text-[#36312d]">{card.name}</p>
                       <p className="text-[9px] text-[#948c83]">{card.set}</p>
@@ -288,35 +353,45 @@ export function HeroPage({ onNavigateLogin, onNavigateRegister, onNavigateDashbo
               </div>
             </div>
 
-            <div className="rounded-[25px] border border-white/10 bg-[#302c29] p-4 shadow-2xl sm:p-6">
-              <div className="mb-5 flex items-center justify-between">
+            <div className="w-full lg:w-[114%] lg:-mr-[14%] rounded-[28px] border border-white/15 bg-[#302c29] p-4 sm:p-5 lg:p-6 shadow-[0_25px_60px_rgba(0,0,0,0.65)] transition-all">
+              <div className="mb-3.5 flex items-center justify-between sm:mb-4">
                 <div>
-                  <p className="text-[10px] uppercase tracking-[0.15em] text-white/40">Novo deck</p>
-                  <h3 className="mt-1 text-xl font-bold">Atraxa, Grand Unifier</h3>
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-[0.16em] text-white/40">Novo deck</p>
+                  <h3 className="text-lg sm:text-xl lg:text-2xl font-black tracking-tight text-white">Atraxa, Grand Unifier</h3>
                 </div>
-                <span className="rounded-full bg-[#e6c66d]/15 px-3 py-1.5 text-xs font-bold text-[#e6c66d]">{activeFormat}</span>
+                <span className="rounded-full border border-[#e6c66d]/30 bg-[#e6c66d]/15 px-3 py-1 text-xs font-bold text-[#e6c66d] shadow-xs">{activeFormat}</span>
               </div>
-              <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
-                {Array.from({ length: 12 }).map((_, index) => (
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 sm:gap-2.5 lg:gap-3">
+                {deckbuilderCards.map((card) => (
                   <div
-                    key={index}
-                    className="aspect-[0.69] rounded-lg border border-white/10"
-                    style={{ background: `linear-gradient(${120 + index * 8}deg, ${['#668478', '#b18b53', '#8d6975', '#687a99', '#a88f62'][index % 5]}, #24211f)` }}
-                  />
+                    key={card.name}
+                    title={card.name}
+                    className="group relative aspect-[0.714] overflow-hidden rounded-xl border border-white/15 bg-[#24211f] shadow-lg transition-all duration-300 hover:-translate-y-2 hover:border-[#e6c66d] hover:shadow-[0_16px_36px_rgba(0,0,0,0.75)] cursor-pointer"
+                  >
+                    <img
+                      src={card.image}
+                      alt={card.name}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-108"
+                    />
+                    <div className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/60 to-transparent p-1.5 sm:p-2 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                      <p className="truncate text-[10px] sm:text-xs font-bold text-white drop-shadow-md">{card.name}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
-              <div className="mt-5 grid grid-cols-3 gap-2 text-center text-xs">
-                <div className="rounded-xl bg-white/[0.06] p-3">
-                  <strong className="block text-lg text-white">38</strong>
-                  <span className="text-white/40">cartas</span>
+              <div className="mt-3.5 sm:mt-4 grid grid-cols-3 gap-2 sm:gap-3 text-center">
+                <div className="rounded-xl border border-white/5 bg-white/[0.05] p-2 sm:p-2.5 transition-colors hover:bg-white/[0.08]">
+                  <strong className="block text-base sm:text-lg font-black text-white">38</strong>
+                  <span className="text-[10px] sm:text-xs font-medium text-white/50">cartas</span>
                 </div>
-                <div className="rounded-xl bg-white/[0.06] p-3">
-                  <strong className="block text-lg text-white">4</strong>
-                  <span className="text-white/40">cores</span>
+                <div className="rounded-xl border border-white/5 bg-white/[0.05] p-2 sm:p-2.5 transition-colors hover:bg-white/[0.08]">
+                  <strong className="block text-base sm:text-lg font-black text-white">4</strong>
+                  <span className="text-[10px] sm:text-xs font-medium text-white/50">cores</span>
                 </div>
-                <div className="rounded-xl bg-white/[0.06] p-3">
-                  <strong className="block text-lg text-[#e6c66d]">72%</strong>
-                  <span className="text-white/40">na coleção</span>
+                <div className="rounded-xl border border-white/5 bg-white/[0.05] p-2 sm:p-2.5 transition-colors hover:bg-white/[0.08]">
+                  <strong className="block text-base sm:text-lg font-black text-[#e6c66d]">72%</strong>
+                  <span className="text-[10px] sm:text-xs font-medium text-white/50">na coleção</span>
                 </div>
               </div>
             </div>

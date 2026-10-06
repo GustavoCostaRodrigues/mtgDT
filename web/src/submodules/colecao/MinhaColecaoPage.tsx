@@ -185,9 +185,8 @@ export function MinhaColecaoPage({
             </label>
             <div className="collection-view-toggle flex items-center gap-1 border p-1 rounded-full bg-white" style={{ borderColor: colors.light.border }}>
               <button
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors cursor-pointer border-0 ${
-                  view === 'grid' ? 'text-white' : ''
-                }`}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors cursor-pointer border-0 ${view === 'grid' ? 'text-white' : ''
+                  }`}
                 style={{ backgroundColor: view === 'grid' ? colors.light.dark : 'transparent', color: view === 'grid' ? '#fff' : colors.light['text-muted'] }}
                 onClick={() => setView('grid')}
                 aria-label="Visualização em grade"
@@ -196,9 +195,8 @@ export function MinhaColecaoPage({
                 ▦
               </button>
               <button
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors cursor-pointer border-0 ${
-                  view === 'list' ? 'text-white' : ''
-                }`}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors cursor-pointer border-0 ${view === 'list' ? 'text-white' : ''
+                  }`}
                 style={{ backgroundColor: view === 'list' ? colors.light.dark : 'transparent', color: view === 'list' ? '#fff' : colors.light['text-muted'] }}
                 onClick={() => setView('list')}
                 aria-label="Visualização em lista"
