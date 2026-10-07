@@ -15,8 +15,11 @@ interface CardSuggestion {
 }
 
 interface CardPrint {
+  id?: string;
   set_code: string;
   set_name: string;
+  raw_set_name?: string;
+  collector_number?: string;
   rarity: string;
   image_url: string;
   price?: string;
@@ -35,6 +38,7 @@ interface CardDetail extends CardSuggestion {
   type_line?: string;
   inCollection?: boolean;
   inWishlist?: boolean;
+  scryfall_id?: string;
   prints?: CardPrint[];
 }
 
@@ -157,7 +161,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Azul',
     mana_cost: '{2}{U}',
     slug: 'fierce-guardianship',
-    image_url: 'https://cards.scryfall.io/normal/front/4/c/4c5503b1-28f0-4a74-9e8e-d62b7cf18ed9.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/f/7/f7f3dd95-bd14-4e0f-a388-444f9cf1b0dc.jpg?1783915698',
     formats: ['Commander'],
   },
   {
@@ -171,7 +175,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Incolor',
     mana_cost: '{2}',
     slug: 'arcane-signet',
-    image_url: 'https://cards.scryfall.io/normal/front/0/b/0bbf8d79-2425-4676-90f7-1116c4983057.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/c/6/c6b6117c-faab-4bbb-b851-07bd8061ef03.jpg?1789644435',
     formats: ['Commander', 'Draft'],
   },
   {
@@ -243,7 +247,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Verde',
     mana_cost: '{1}{G}',
     slug: 'heroic-intervention',
-    image_url: 'https://cards.scryfall.io/normal/front/e/3/e32c67d1-187f-40df-b3b3-68dd4444585f.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/e/3/e32c67d1-187f-40df-b3b3-6036f5c92834.jpg?1783915629',
     formats: ['Commander', 'Pioneer', 'Modern'],
   },
 
@@ -273,7 +277,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Preto',
     mana_cost: '{1}{B}',
     slug: 'orcish-bowmasters',
-    image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-8651-4e2b-b792-4b72ff64860d.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-5631-4e20-ac69-df392ac9e109.jpg?1783916299',
     formats: ['Modern', 'Commander', 'Legacy'],
   },
   {
@@ -358,7 +362,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Incolor',
     mana_cost: '',
     slug: 'misty-rainforest',
-    image_url: 'https://cards.scryfall.io/normal/front/8/8/88231c0d-0cc8-44ec-bf95-81c1710ac141.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/8/8/88231c0d-0cc8-44ec-bf95-81d1710ac141.jpg',
     formats: ['Modern', 'Commander', 'Legacy'],
   },
 
@@ -389,7 +393,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Preto',
     mana_cost: '{2}{B}',
     slug: 'preacher-of-the-schism',
-    image_url: 'https://cards.scryfall.io/normal/front/8/9/89345f61-59d6-4956-96a6-47770e359690.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/8/9/89345f55-2b32-4356-945a-d56dded39909.jpg?1783913774',
     formats: ['Standard', 'Pioneer'],
   },
   {
@@ -403,7 +407,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Preto',
     mana_cost: '{B}',
     slug: 'cut-down',
-    image_url: 'https://cards.scryfall.io/normal/front/7/5/753db072-5d6a-4f37-9f7d-255572ecd3bd.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/7/5/753db072-5d6a-4f37-8f7d-255572ecd3bd.jpg?1783921335',
     formats: ['Standard', 'Pioneer'],
   },
   {
@@ -417,7 +421,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Vermelho',
     mana_cost: '{R}',
     slug: 'monastery-swiftspear',
-    image_url: 'https://cards.scryfall.io/normal/front/e/8/e8347375-145d-4217-a18a-4467d383b276.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/d/6/d6bfa227-4309-40ed-952c-279595eab17e.jpg?1783920066',
     formats: ['Standard', 'Pioneer', 'Modern', 'Draft'],
   },
   {
@@ -431,7 +435,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Incolor',
     mana_cost: '',
     slug: 'cavern-of-souls',
-    image_url: 'https://cards.scryfall.io/normal/front/3/a/3aad15a3-2c1b-4466-9b66-34fe527b7558.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/3/a/3aad15a2-8a1b-4460-9b06-e85863081878.jpg?1783913719',
     formats: ['Standard', 'Pioneer', 'Modern', 'Commander', 'Legacy'],
   },
 
@@ -461,7 +465,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Preto',
     mana_cost: '{B}',
     slug: 'fatal-push',
-    image_url: 'https://cards.scryfall.io/normal/front/6/e/6e9da5aa-94e4-4aa9-9949-0129f12d6a74.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/6/e/6e9d8fe4-fd9b-4923-92bf-7dd6b8fa02e7.jpg?1783930180',
     formats: ['Pioneer', 'Modern', 'Commander'],
   },
   {
@@ -475,7 +479,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Azul',
     mana_cost: '{7}{U}',
     slug: 'treasure-cruise',
-    image_url: 'https://cards.scryfall.io/normal/front/6/4/64edb74f-4e64-443f-b883-74cf81f08e42.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/4/2/42c45880-15c7-4259-8066-c04d031d8216.jpg?1783903788',
     formats: ['Pioneer', 'Commander'],
   },
   {
@@ -534,7 +538,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Branco',
     mana_cost: '{W}',
     slug: 'swords-to-plowshares',
-    image_url: 'https://cards.scryfall.io/normal/front/8/1/81c37217-1011-4091-a128-662365cb9523.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/f/7/f7e12477-d59f-442b-a678-1be746d0b7be.jpg?1789599810',
     formats: ['Legacy', 'Commander', 'Draft'],
   },
   {
@@ -563,7 +567,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Branco',
     mana_cost: '{3}{W}{W}',
     slug: 'sunfall',
-    image_url: 'https://cards.scryfall.io/normal/front/3/2/32e29c7d-ed4b-4ef6-b6ea-091c773bc9ad.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/a/5/a560b9a7-4c00-4c0c-b63d-774d3f6b9aa9.jpg?1789611521',
     formats: ['Standard', 'Pioneer', 'Commander'],
   },
   {
@@ -577,7 +581,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Preto',
     mana_cost: '{1}{B}',
     slug: 'deep-cavern-bat',
-    image_url: 'https://cards.scryfall.io/normal/front/c/9/c924945d-2384-4cc8-a403-fa403f9ec2ce.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/6/9/69c68c95-b788-43b1-9f22-1b22c5a00b25.jpg?1783913780',
     formats: ['Standard', 'Pioneer'],
   },
   {
@@ -605,7 +609,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Azul',
     mana_cost: '{U}{U}',
     slug: 'three-steps-ahead',
-    image_url: 'https://cards.scryfall.io/normal/front/8/f/8f45e631-9e23-4e6f-987a-624ff9676646.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/8/f/8fffd839-2337-4a14-9312-cee085a17f4b.jpg?1783911837',
     formats: ['Standard', 'Pioneer', 'Commander'],
   },
   {
@@ -677,7 +681,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Azul',
     mana_cost: '{5}{U}{U}',
     slug: 'murktide-regent',
-    image_url: 'https://cards.scryfall.io/normal/front/2/0/20c4aae1-7665-4df7-bd51-a1d9fa966bb4.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/2/0/20c4aae1-7665-4df7-bd51-a1d95bf8a17d.jpg?1783926875',
     formats: ['Modern', 'Legacy'],
   },
   // LEGACY & DRAFT ADDITIONS
@@ -692,7 +696,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Incolor',
     mana_cost: '{0}',
     slug: 'lotus-petal',
-    image_url: 'https://cards.scryfall.io/normal/front/f/1/f149ee0a-001d-44a2-b092-8046ec67b1bf.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/f/8/f85ab5f9-508e-45de-8fa1-ce1f16552ffc.jpg?1783938446',
     formats: ['Legacy', 'Commander'],
   },
   {
@@ -720,7 +724,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Verde',
     mana_cost: '{G}',
     slug: 'giant-growth',
-    image_url: 'https://cards.scryfall.io/normal/front/a/e/ae99878a-cf8e-4a8b-9658-693f18e95c1a.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/f/d/fd1f95bf-48ea-455a-8a6c-0249b11c8900.jpg?1783902918',
     formats: ['Draft', 'Standard', 'Pioneer', 'Commander'],
   },
   {
@@ -734,7 +738,7 @@ export const FORMAT_STAPLES: FormatStapleCard[] = [
     color: 'Preto',
     mana_cost: '{1}{B}{B}',
     slug: 'murder',
-    image_url: 'https://cards.scryfall.io/normal/front/2/c/2c249609-9cf7-46f1-b816-fce29f665d82.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/2/c/2c249609-9cf7-46f1-b94c-9329add966bb.jpg?1783909477',
     formats: ['Draft', 'Standard', 'Pioneer', 'Commander'],
   },
 ];
@@ -756,8 +760,8 @@ const catalogCards = [
     set_code: 'cmm',
     prints: [
       { set_code: 'cmm', set_name: 'Commander Masters', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/f/9/f9a32f17-49c4-4654-a087-1ba474f37377.jpg', price: 'R$ 42,00' },
-      { set_code: 'fdc', set_name: 'Foundations Commander', rarity: 'uncommon', image_url: 'https://cards.scryfall.io/normal/front/4/f/4f152dd9-2b35-45b2-90fe-8c71d0634226.jpg?1789753351', price: 'R$ 15,00' },
-      { set_code: 'sld', set_name: 'Secret Lair Drop', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/b/f/bf6b187e-5ad0-4731-9c39-638451ac1e30.jpg?1790743517', price: 'R$ 120,00' },
+      { set_code: 'fdc', set_name: 'Foundations Commander', rarity: 'uncommon', image_url: 'https://cards.scryfall.io/normal/front/4/f/4f152dd9-2b35-45b2-90fe-8c71d0634226.jpg', price: 'R$ 15,00' },
+      { set_code: 'sld', set_name: 'Secret Lair Drop', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/b/f/bf6b187e-5ad0-4731-9c39-638451ac1e30.jpg', price: 'R$ 120,00' },
     ],
   },
   {
@@ -796,7 +800,7 @@ const catalogCards = [
     set_code: 'mh1',
     prints: [
       { set_code: 'mh1', set_name: 'Modern Horizons', rarity: 'uncommon', image_url: 'https://cards.scryfall.io/normal/front/e/3/e3285e6b-3e79-4d7c-bf96-d920f973b122.jpg', price: 'R$ 18,90' },
-      { set_code: 'sta', set_name: 'Mystical Archive', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/a/e/ae4f9315-41f4-400e-8508-8f10248a430d.jpg', price: 'R$ 35,00' },
+      { set_code: 'sta', set_name: 'Mystical Archive', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/4/e/4eaac4fd-95f5-4f38-b593-0101e79a20f9.jpg?1783927429', price: 'R$ 35,00' },
     ],
   },
   {
@@ -811,11 +815,11 @@ const catalogCards = [
     inWishlist: false,
     art: 'cream',
     slug: 'swords-to-plowshares',
-    image_url: 'https://cards.scryfall.io/normal/front/8/1/81c37217-1011-4091-a128-662365cb9523.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/f/7/f7e12477-d59f-442b-a678-1be746d0b7be.jpg?1789599810',
     set_code: 'plist',
     prints: [
-      { set_code: 'plist', set_name: 'The List', rarity: 'uncommon', image_url: 'https://cards.scryfall.io/normal/front/8/1/81c37217-1011-4091-a128-662365cb9523.jpg', price: 'R$ 24,50' },
-      { set_code: 'sta', set_name: 'Mystical Archive', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/0/6/06e53623-f3d4-42a9-827c-e4193902250e.jpg', price: 'R$ 40,00' },
+      { set_code: 'plist', set_name: 'The List', rarity: 'uncommon', image_url: 'https://cards.scryfall.io/normal/front/f/7/f7e12477-d59f-442b-a678-1be746d0b7be.jpg?1789599810', price: 'R$ 24,50' },
+      { set_code: 'sta', set_name: 'Mystical Archive', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/c/c/cc9ece2f-7eda-4fc5-a562-3e16e71560e9.jpg?1783927441', price: 'R$ 40,00' },
     ],
   },
   {
@@ -830,11 +834,11 @@ const catalogCards = [
     inWishlist: true,
     art: 'purple',
     slug: 'orcish-bowmasters',
-    image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-8651-4e2b-b792-4b72ff64860d.jpg',
+    image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-5631-4e20-ac69-df392ac9e109.jpg?1783916299',
     set_code: 'ltr',
     prints: [
-      { set_code: 'ltr', set_name: 'Tales of Middle-earth', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-8651-4e2b-b792-4b72ff64860d.jpg', price: 'R$ 96,50' },
-      { set_code: 'ltr-alt', set_name: 'Poster Art Promo', rarity: 'mythic', image_url: 'https://cards.scryfall.io/normal/front/0/e/0e740d12-dbf0-4df2-8cb1-807bcbe8f029.jpg', price: 'R$ 150,00' },
+      { set_code: 'ltr', set_name: 'Tales of Middle-earth', rarity: 'rare', image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-5631-4e20-ac69-df392ac9e109.jpg?1783916299', price: 'R$ 96,50' },
+      { set_code: 'ltr-alt', set_name: 'Poster Art Promo', rarity: 'mythic', image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-5631-4e20-ac69-df392ac9e109.jpg?1783916299', price: 'R$ 150,00' },
     ],
   },
 ];
@@ -875,6 +879,44 @@ const findCardFallback = (slug: string) => {
   return undefined;
 };
 
+function SafeCardImage({ src, alt, name, className }: { src: string; alt: string; name: string; className?: string }) {
+  const [imgSrc, setImgSrc] = useState(src);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setImgSrc(src);
+    setHasError(false);
+  }, [src]);
+
+  const handleError = () => {
+    const apiFallback = `https://api.scryfall.com/cards/named?exact=${encodeURIComponent(name)}&format=image&version=normal`;
+    if (imgSrc !== apiFallback) {
+      setImgSrc(apiFallback);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  if (hasError || !imgSrc) {
+    return (
+      <div className="w-full h-full flex flex-col items-center justify-center p-4 bg-neutral-900 text-neutral-400 text-center select-none border border-black/10">
+        <span className="text-2xl mb-1">🃏</span>
+        <span className="text-[10px] font-bold truncate max-w-full">{name}</span>
+      </div>
+    );
+  }
+
+  return (
+    <img
+      src={imgSrc}
+      alt={alt}
+      loading="lazy"
+      className={className || "w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"}
+      onError={handleError}
+    />
+  );
+}
+
 export function BuscarCartasPage({
   initialQuery = '',
   cardSlug = '',
@@ -895,36 +937,67 @@ export function BuscarCartasPage({
   const [colorFilter, setColorFilter] = useState('Todas');
   const [typeFilter, setTypeFilter] = useState('Todos');
   const [rarityFilter, setRarityFilter] = useState('Todas');
-  const [collectionSlugs, setCollectionSlugs] = useState<Set<string>>(new Set(['sol-ring']));
-  const [wishlistSlugs, setWishlistSlugs] = useState<Set<string>>(new Set(['rhystic-study']));
+
+  // Inicialização limpa: os dados reais serão carregados dinamicamente da API do Supabase
+  const [collectionSlugs, setCollectionSlugs] = useState<Set<string>>(new Set());
+  const [wishlistSlugs, setWishlistSlugs] = useState<Set<string>>(new Set());
+
   const [staplesPage, setStaplesPage] = useState(1);
   const STAPLES_PER_PAGE = 12;
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [loading] = useState(false);
 
-  // Estados para Autocomplete e Detalhes
   const [suggestions, setSuggestions] = useState<CardSuggestion[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [selectedCard, setSelectedCard] = useState<CardDetail | null>(null);
   const [loadingDetails, setLoadingDetails] = useState(false);
 
-  // Estados para a edição/print ativa na tela de detalhes e preview no hover da lista lateral
   const [activePrintIndex, setActivePrintIndex] = useState<number>(0);
   const [hoveredPrint, setHoveredPrint] = useState<CardPrint | null>(null);
 
-  // Estados para hover na miniatura do dropdown
   const [hoveredCard, setHoveredCard] = useState<CardSuggestion | null>(null);
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
-  // Resetar página de staples para 1 sempre que o formato ou filtros mudarem
+  // Carregar a coleção real do usuário autenticado no Supabase ao montar a página
+  useEffect(() => {
+    async function fetchUserCollection() {
+      const token = localStorage.getItem('spellbinder_token');
+      try {
+        const response = await fetch('http://localhost:3333/api/collection', {
+          headers: {
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const slugs = new Set<string>();
+          data.forEach((item: any) => {
+            const rawName = item.name || item.scryfall_cards_cache?.name;
+            if (rawName) {
+              const cardSlug = rawName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+              slugs.add(cardSlug);
+              slugs.add(rawName.toLowerCase().trim());
+            }
+            if (item.card_scryfall_id) slugs.add(String(item.card_scryfall_id));
+            if (item.scryfall_id) slugs.add(String(item.scryfall_id));
+          });
+          setCollectionSlugs(slugs);
+        }
+      } catch (err) {
+        console.error('Erro ao carregar coleção do servidor:', err);
+      }
+    }
+
+    fetchUserCollection();
+  }, []);
+
   useEffect(() => {
     setStaplesPage(1);
   }, [selectedFormat, colorFilter, typeFilter, rarityFilter, searchQuery]);
 
-  // Sincronização em tempo real do formato selecionado na Navbar
   useEffect(() => {
     const handleFormatChange = (e: any) => {
       if (e?.detail) {
@@ -1106,6 +1179,33 @@ export function BuscarCartasPage({
     return map[rarity.toLowerCase()] || rarity;
   };
 
+  const renderOracleText = (text?: string | null) => {
+    if (!text) return 'Esta carta não possui texto de regras impresso.';
+    const parts = text.split(/(\{[^}]+\})/g);
+
+    return parts.map((part, index) => {
+      const match = part.match(/^\{([^}]+)\}$/);
+      if (match) {
+        const code = match[1].toUpperCase();
+        const svgUrl = `https://svgs.scryfall.io/card-symbols/${code}.svg`;
+
+        return (
+          <img
+            key={index}
+            src={svgUrl}
+            alt={part}
+            title={part}
+            className="w-3.5 h-3.5 inline-block align-middle mx-0.5 drop-shadow-xs"
+            onError={(e) => {
+              (e.target as HTMLElement).replaceWith(document.createTextNode(part));
+            }}
+          />
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
+
   const renderManaCost = (manaCostString?: string | null) => {
     if (!manaCostString) return <span>Sem custo impresso</span>;
     const symbols = manaCostString.match(/\{([^}]+)\}/g);
@@ -1147,41 +1247,166 @@ export function BuscarCartasPage({
     return card.price || 'R$ 25,00';
   };
 
-  const handleAddCollection = (cardName: string, cardSlug?: string) => {
-    if (cardSlug) {
-      setCollectionSlugs((prev) => new Set(prev).add(cardSlug));
+  const handleToggleCollection = async (
+    optionsOrName: string | {
+      name: string;
+      slug?: string;
+      scryfallId?: string | number;
+      setCode?: string;
+      setName?: string;
+      imageUrl?: string;
+      collectorNumber?: string;
+    },
+    cardIdArg?: string | number,
+    cardSlugArg?: string
+  ) => {
+    let cardName: string;
+    let cardSlug: string;
+    let scryfallId: string | number | undefined;
+    let setCode: string | undefined;
+    let setName: string | undefined;
+    let imageUrl: string | undefined;
+    let collectorNumber: string | undefined;
+
+    if (typeof optionsOrName === 'string') {
+      cardName = optionsOrName;
+      cardSlug = cardSlugArg || String(cardIdArg || '').toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      scryfallId = cardIdArg;
+    } else {
+      cardName = optionsOrName.name;
+      cardSlug = optionsOrName.slug || cardName.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+      scryfallId = optionsOrName.scryfallId;
+      setCode = optionsOrName.setCode;
+      setName = optionsOrName.setName;
+      imageUrl = optionsOrName.imageUrl;
+      collectorNumber = optionsOrName.collectorNumber;
     }
-    if (selectedCard) {
-      setSelectedCard({ ...selectedCard, inCollection: true } as any);
+
+    const nameKey = cardName.toLowerCase().trim();
+    const token = localStorage.getItem('spellbinder_token');
+    const isInCollection = Boolean(
+      (scryfallId && collectionSlugs.has(String(scryfallId))) ||
+      collectionSlugs.has(cardSlug) ||
+      collectionSlugs.has(nameKey)
+    );
+    const method = isInCollection ? 'DELETE' : 'POST';
+
+    try {
+      const deleteIdentifier = scryfallId || cardSlug || cardName;
+      const url = method === 'DELETE'
+        ? `http://localhost:3333/api/collection/${encodeURIComponent(String(deleteIdentifier))}`
+        : 'http://localhost:3333/api/collection';
+
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        ...(method === 'POST' ? {
+          body: JSON.stringify({
+            scryfall_id: scryfallId,
+            print_id: typeof scryfallId === 'string' ? scryfallId : undefined,
+            slug: cardSlug,
+            name: cardName,
+            set_code: setCode,
+            set_name: setName,
+            image_url: imageUrl,
+            collector_number: collectorNumber,
+            quantity: 1,
+          })
+        } : {}),
+      });
+
+      if (response.ok) {
+        setCollectionSlugs((prev) => {
+          const newSet = new Set(prev);
+          if (isInCollection) {
+            newSet.delete(cardSlug);
+            newSet.delete(nameKey);
+            if (scryfallId) newSet.delete(String(scryfallId));
+            setToastMessage(`"${cardName}" foi removida da sua coleção.`);
+          } else {
+            newSet.add(cardSlug);
+            newSet.add(nameKey);
+            if (scryfallId) newSet.add(String(scryfallId));
+            setToastMessage(`"${cardName}" foi adicionada à sua coleção!`);
+          }
+          return newSet;
+        });
+      } else {
+        const errorData = await response.json();
+        console.error('Erro retornado pela API:', errorData);
+        setToastMessage(`Erro: ${errorData.message || 'Erro ao atualizar a coleção'}`);
+      }
+    } catch (err) {
+      console.error('Erro de conexão:', err);
+      setToastMessage('Falha de conexão com o servidor.');
     }
-    setToastMessage(`"${cardName}" adicionada à sua coleção!`);
   };
 
-  const handleAddWishlist = (cardName: string, cardSlug?: string) => {
-    if (cardSlug) {
-      setWishlistSlugs((prev) => new Set(prev).add(cardSlug));
+  const handleToggleWishlist = async (cardName: string, cardSlug: string) => {
+    const token = localStorage.getItem('spellbinder_token');
+    const isInWishlist = wishlistSlugs.has(cardSlug);
+    const method = isInWishlist ? 'DELETE' : 'POST';
+
+    try {
+      const url = method === 'DELETE'
+        ? `http://localhost:3333/api/collection/${cardSlug}`
+        : 'http://localhost:3333/api/collection';
+
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        ...(method === 'POST' ? {
+          body: JSON.stringify({
+            slug: cardSlug,
+            name: cardName,
+            set_code: 'wishlist',
+            quantity: 1,
+          })
+        } : {}),
+      });
+
+      if (response.ok) {
+        setWishlistSlugs((prev) => {
+          const newSet = new Set(prev);
+          if (isInWishlist) {
+            newSet.delete(cardSlug);
+            setToastMessage(`"${cardName}" foi removida da lista de desejos.`);
+          } else {
+            newSet.add(cardSlug);
+            setToastMessage(`"${cardName}" foi adicionada à sua lista de desejos!`);
+          }
+          return newSet;
+        });
+
+        if (selectedCard) {
+          setSelectedCard({ ...selectedCard, inWishlist: !isInWishlist } as any);
+        }
+      } else {
+        setToastMessage('Erro ao atualizar a lista de desejos no servidor.');
+      }
+    } catch (err) {
+      console.error('Erro de conexão com a API de wishlist:', err);
+      setToastMessage('Falha de conexão com o servidor.');
     }
-    if (selectedCard) {
-      setSelectedCard({ ...selectedCard, inWishlist: true } as any);
-    }
-    setToastMessage(`"${cardName}" adicionada à sua lista de desejos!`);
   };
 
-  // Lista dinâmica e filtrada de Staples do Formato selecionado na Navbar
   const formatStaplesFiltered = useMemo(() => {
     return FORMAT_STAPLES.filter((card) => {
-      // 1. Formato selecionado na Navbar
       const matchesFormat = card.formats.some(
         (f) => f.toLowerCase() === selectedFormat.toLowerCase()
       );
       if (!matchesFormat) return false;
 
-      // 2. Filtro visual por cor
       if (colorFilter !== 'Todas') {
         if (card.color !== colorFilter) return false;
       }
 
-      // 3. Filtro por pílula de tipo
       if (typeFilter !== 'Todos') {
         if (typeFilter === 'Lendárias') {
           if (!card.isLegendary && !card.type.toLowerCase().includes('lendár')) return false;
@@ -1190,12 +1415,10 @@ export function BuscarCartasPage({
         }
       }
 
-      // 4. Filtro por raridade
       if (rarityFilter !== 'Todas') {
         if (card.rarity.toLowerCase() !== rarityFilter.toLowerCase()) return false;
       }
 
-      // 5. Filtro de pesquisa textual se digitado
       if (searchQuery.trim().length > 0) {
         const q = searchQuery.toLowerCase().trim();
         const matchesName = card.name.toLowerCase().includes(q);
@@ -1207,7 +1430,6 @@ export function BuscarCartasPage({
     });
   }, [selectedFormat, colorFilter, typeFilter, rarityFilter, searchQuery]);
 
-  // Paginação de 12 cartas para os Staples do formato
   const totalStaples = formatStaplesFiltered.length;
   const totalPages = Math.ceil(totalStaples / STAPLES_PER_PAGE) || 1;
   const paginatedStaples = useMemo(() => {
@@ -1215,17 +1437,26 @@ export function BuscarCartasPage({
     return formatStaplesFiltered.slice(startIndex, startIndex + STAPLES_PER_PAGE);
   }, [formatStaplesFiltered, staplesPage]);
 
-  const activePrint = selectedCard?.prints && selectedCard.prints.length > 0
+  const activePrint: CardPrint = selectedCard?.prints && selectedCard.prints.length > 0
     ? selectedCard.prints[activePrintIndex] || selectedCard.prints[0]
     : {
-      image_url: selectedCard?.image_url,
-      set_name: selectedCard?.set_name || selectedCard?.set,
+      id: selectedCard?.scryfall_id || selectedCard?.id ? String(selectedCard.scryfall_id || selectedCard.id) : undefined,
+      image_url: selectedCard?.image_url || '',
+      set_name: selectedCard?.set_name || selectedCard?.set || 'Coleção Principal',
       set_code: selectedCard?.set_code || 'cmm',
-      rarity: selectedCard?.rarity,
+      rarity: selectedCard?.rarity || 'common',
     };
 
-  // Edição exibida atualmente (se o mouse estiver sobre uma coleção específica, exibe ela; caso contrário, a ativa)
   const displayedPrint = hoveredPrint || activePrint;
+
+  const isCardInCollection = Boolean(
+    (activePrint?.id && collectionSlugs.has(String(activePrint.id))) ||
+    (selectedCard?.slug && collectionSlugs.has(selectedCard.slug)) ||
+    (selectedCard?.name && (
+      collectionSlugs.has(selectedCard.name.toLowerCase().trim()) ||
+      collectionSlugs.has(selectedCard.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'))
+    ))
+  );
 
   return (
     <main
@@ -1260,7 +1491,6 @@ export function BuscarCartasPage({
                 </h1>
               </div>
 
-              {/* Barra de pesquisa interna com dropdown */}
               <div className="relative w-full md:w-96" ref={searchContainerRef}>
                 <div
                   className="flex items-center gap-2.5 h-10 rounded-xl border px-3.5 shadow-sm relative z-20"
@@ -1302,7 +1532,6 @@ export function BuscarCartasPage({
                   )}
                 </div>
 
-                {/* Dropdown interno compacto */}
                 {showDropdown && suggestions.length > 0 && (
                   <div
                     className="absolute top-12 left-0 w-full rounded-2xl border shadow-2xl z-50 overflow-hidden py-1.5"
@@ -1323,20 +1552,14 @@ export function BuscarCartasPage({
                           className="w-full text-left px-3 py-2 flex items-center justify-between transition-colors cursor-pointer hover:bg-black/5 dark:hover:bg-white/5 border-b border-black/5 last:border-none"
                         >
                           <div className="flex items-center gap-2.5">
-                            {item.image_url ? (
-                              <img
-                                src={item.image_url}
+                            <div className="w-8 h-11 shrink-0 rounded overflow-hidden shadow-xs border border-black/10">
+                              <SafeCardImage
+                                src={item.image_url || ''}
                                 alt={item.name}
-                                onMouseEnter={() => setHoveredCard(item)}
-                                onMouseMove={handleMouseMove}
-                                onMouseLeave={() => setHoveredCard(null)}
-                                className="w-8 h-11 object-cover rounded shadow-xs border border-black/10 shrink-0 transition-transform hover:scale-105"
+                                name={item.name}
+                                className="w-full h-full object-cover transition-transform hover:scale-105"
                               />
-                            ) : (
-                              <div className="w-8 h-11 rounded bg-black/5 border border-black/10 flex items-center justify-center text-[8px] font-bold text-center shrink-0">
-                                Sem foto
-                              </div>
-                            )}
+                            </div>
                             <div>
                               <p className="text-xs font-black tracking-tight leading-snug" style={{ color: colors.light['text-main'] }}>{item.name}</p>
                               <p className="text-[10px] font-medium" style={{ color: colors.light['text-muted'] }}>{item.set}</p>
@@ -1353,10 +1576,8 @@ export function BuscarCartasPage({
               </div>
             </div>
 
-            {/* Filtros visíveis apenas quando no catálogo padrão */}
             {!selectedCard && (
               <div className="flex flex-col gap-3 mt-4 pt-3 border-t" style={{ borderColor: colors.light.border }}>
-                {/* Linha 1: Círculos de Cores de Mana + Raridade + Limpar Filtros */}
                 <div className="flex flex-wrap items-center justify-between gap-3">
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="text-[11px] font-black uppercase tracking-wider mr-1" style={{ color: colors.light['text-faint'] }}>
@@ -1365,9 +1586,8 @@ export function BuscarCartasPage({
                     <button
                       type="button"
                       onClick={() => setColorFilter('Todas')}
-                      className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border shadow-2xs ${
-                        colorFilter === 'Todas' ? 'shadow-xs scale-102 font-black' : 'opacity-70 hover:opacity-100 hover:bg-black/5'
-                      }`}
+                      className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border shadow-2xs ${colorFilter === 'Todas' ? 'shadow-xs scale-102 font-black' : 'opacity-70 hover:opacity-100 hover:bg-black/5'
+                        }`}
                       style={{
                         backgroundColor: colorFilter === 'Todas' ? colors.light.dark : colors.light.surface,
                         color: colorFilter === 'Todas' ? '#ffffff' : colors.light['text-main'],
@@ -1386,11 +1606,10 @@ export function BuscarCartasPage({
                             type="button"
                             onClick={() => setColorFilter(isSelected ? 'Todas' : mc.name)}
                             title={`Filtrar por ${mc.name}`}
-                            className={`relative group w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer border-2 ${
-                              isSelected
-                                ? 'scale-110 shadow-md ring-2 ring-offset-2'
-                                : 'hover:scale-105 opacity-85 hover:opacity-100 shadow-2xs'
-                            }`}
+                            className={`relative group w-8 h-8 rounded-full flex items-center justify-center transition-all duration-150 cursor-pointer border-2 ${isSelected
+                              ? 'scale-110 shadow-md ring-2 ring-offset-2'
+                              : 'hover:scale-105 opacity-85 hover:opacity-100 shadow-2xs'
+                              }`}
                             style={{
                               backgroundColor: mc.bg,
                               borderColor: isSelected ? mc.border : colors.light.border,
@@ -1408,7 +1627,6 @@ export function BuscarCartasPage({
                     </div>
                   </div>
 
-                  {/* Raridade e Limpar Filtros */}
                   <div className="flex items-center gap-2">
                     <select
                       value={rarityFilter}
@@ -1445,7 +1663,6 @@ export function BuscarCartasPage({
                   </div>
                 </div>
 
-                {/* Linha 2: Atalhos Rápidos por Categorias e Tipos em Pílulas */}
                 <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
                   <span className="text-[11px] font-black uppercase tracking-wider mr-1 shrink-0" style={{ color: colors.light['text-faint'] }}>
                     Categorias / Tipos:
@@ -1457,11 +1674,10 @@ export function BuscarCartasPage({
                         key={tp.id}
                         type="button"
                         onClick={() => setTypeFilter(tp.id)}
-                        className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${
-                          isSelected
-                            ? 'shadow-xs scale-102 font-black'
-                            : 'opacity-75 hover:opacity-100 hover:bg-black/5'
-                        }`}
+                        className={`px-3 py-1 rounded-full text-xs font-bold whitespace-nowrap transition-all cursor-pointer border ${isSelected
+                          ? 'shadow-xs scale-102 font-black'
+                          : 'opacity-75 hover:opacity-100 hover:bg-black/5'
+                          }`}
                         style={{
                           backgroundColor: isSelected ? colors.light.dark : colors.light.surface,
                           color: isSelected ? '#ffffff' : colors.light['text-main'],
@@ -1477,7 +1693,6 @@ export function BuscarCartasPage({
             )}
           </header>
 
-          {/* TELA DE DETALHES DA CARTA */}
           {loadingDetails ? (
             <div className="py-20 text-center font-bold text-sm" style={{ color: colors.light['text-muted'] }}>
               <div className="inline-block w-6 h-6 border-2 border-[#9b7130] border-t-transparent rounded-full animate-spin mb-3" />
@@ -1485,7 +1700,6 @@ export function BuscarCartasPage({
             </div>
           ) : selectedCard ? (
             <div className="flex flex-col flex-1">
-              {/* Botão de voltar compacto */}
               <button
                 type="button"
                 onClick={handleBackToList}
@@ -1499,9 +1713,7 @@ export function BuscarCartasPage({
                 className="rounded-3xl border p-5 md:p-8 shadow-md grid grid-cols-1 md:grid-cols-12 gap-8 items-start flex-1"
                 style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border }}
               >
-                {/* 1 - Lado Esquerdo: Lista Vertical Alinhada no Topo + Imagem Principal */}
                 <div className="md:col-span-5 flex items-start gap-6 pt-1">
-                  {/* Lista Vertical Simples de Coleções com Símbolo Oficial da Edição */}
                   {selectedCard.prints && selectedCard.prints.length > 0 && (
                     <div className="flex flex-col max-h-[380px] overflow-y-auto pr-2 w-52 shrink-0 divide-y" style={{ borderColor: colors.light.border }}>
                       <div className="pb-2 mb-1">
@@ -1527,11 +1739,10 @@ export function BuscarCartasPage({
                             }}
                             onMouseMove={handleMouseMove}
                             onMouseLeave={() => setHoveredPrint(null)}
-                            className={`w-full text-left py-2.5 px-2 rounded-xl transition-all cursor-pointer flex flex-col gap-0.5 group ${
-                              isSelected
-                                ? 'bg-black/5 dark:bg-white/10 opacity-100 font-black shadow-2xs'
-                                : 'opacity-70 hover:opacity-100 hover:bg-black/[0.03]'
-                            }`}
+                            className={`w-full text-left py-2.5 px-2 rounded-xl transition-all cursor-pointer flex flex-col gap-0.5 group ${isSelected
+                              ? 'bg-black/5 dark:bg-white/10 opacity-100 font-black shadow-2xs'
+                              : 'opacity-70 hover:opacity-100 hover:bg-black/[0.03]'
+                              }`}
                           >
                             <div className="flex items-center gap-2">
                               <img
@@ -1550,7 +1761,7 @@ export function BuscarCartasPage({
                               </span>
                             </div>
                             <span className="text-[9px] uppercase font-bold pl-6" style={{ color: colors.light['text-faint'] }}>
-                              {print.set_code} • {getRarityLabel(print.rarity)}
+                              {print.set_code} {(print as any).collector_number ? `• #${(print as any).collector_number}` : ''} • {getRarityLabel(print.rarity)}
                             </span>
                           </div>
                         );
@@ -1558,13 +1769,13 @@ export function BuscarCartasPage({
                     </div>
                   )}
 
-                  {/* Imagem da carta selecionada em destaque (atualiza instantaneamente no hover e clique da coleção) */}
                   <div className="flex-1 flex justify-center">
                     {displayedPrint?.image_url ? (
-                      <img
+                      <SafeCardImage
                         key={displayedPrint.image_url}
                         src={displayedPrint.image_url}
                         alt={displayedPrint.set_name || selectedCard.name}
+                        name={selectedCard.name}
                         className="w-full max-w-[300px] md:max-w-[350px] rounded-2xl shadow-2xl object-contain border border-black/10 transition-all duration-150"
                       />
                     ) : (
@@ -1575,7 +1786,6 @@ export function BuscarCartasPage({
                   </div>
                 </div>
 
-                {/* 2 - Lado Direito: Detalhes em lista vertical + Botões abaixo */}
                 <div className="md:col-span-7 flex flex-col justify-center space-y-4">
                   <div className="space-y-3">
                     <div className="flex items-center justify-between">
@@ -1619,7 +1829,6 @@ export function BuscarCartasPage({
                       </div>
                     </div>
 
-                    {/* Texto do efeito da carta */}
                     <div className="mt-2">
                       <p className="text-[10px] font-black uppercase tracking-wider mb-1" style={{ color: colors.light['text-muted'] }}>
                         Texto da Carta (Oracle / Efeito)
@@ -1628,19 +1837,26 @@ export function BuscarCartasPage({
                         className="p-3 rounded-2xl border text-xs md:text-sm leading-relaxed whitespace-pre-line font-medium max-h-[140px] overflow-y-auto"
                         style={{ backgroundColor: colors.light.background, borderColor: colors.light.border, color: colors.light['text-main'] }}
                       >
-                        {selectedCard.oracle_text || 'Esta carta não possui texto de regras impresso.'}
+                        {renderOracleText(selectedCard.oracle_text)}
                       </div>
                     </div>
                   </div>
 
-                  {/* 3 - Botões de Ação */}
                   <div className="pt-2 flex flex-col sm:flex-row gap-3">
                     <button
                       type="button"
-                      onClick={() => handleAddCollection(selectedCard.name)}
+                      onClick={() => handleToggleCollection({
+                        name: selectedCard.name,
+                        slug: selectedCard.slug,
+                        scryfallId: activePrint?.id,
+                        setCode: activePrint?.set_code,
+                        setName: activePrint?.set_name,
+                        imageUrl: activePrint?.image_url || undefined,
+                        collectorNumber: activePrint?.collector_number,
+                      })}
                       style={{
                         border: `2px solid ${colors.light.dark}`,
-                        backgroundColor: selectedCard.inCollection ? colors.light['surface-alt'] : colors.light.dark,
+                        backgroundColor: isCardInCollection ? colors.light['surface-alt'] : colors.light.dark,
                         borderRadius: '0.9em',
                         cursor: 'pointer',
                         padding: '0.7em 1.2em',
@@ -1648,14 +1864,14 @@ export function BuscarCartasPage({
                         flex: 1,
                       }}
                     >
-                      <span className="flex items-center justify-center gap-2 font-bold" style={{ color: selectedCard.inCollection ? colors.light['text-main'] : '#ffffff' }}>
-                        {selectedCard.inCollection ? '✓ Na coleção' : '+ Adicionar à coleção'}
+                      <span className="flex items-center justify-center gap-2 font-bold" style={{ color: isCardInCollection ? colors.light['text-main'] : '#ffffff' }}>
+                        {isCardInCollection ? '✓ Na coleção' : '+ Adicionar à coleção'}
                       </span>
                     </button>
 
                     <button
                       type="button"
-                      onClick={() => handleAddWishlist(selectedCard.name)}
+                      onClick={() => handleToggleWishlist(selectedCard.name, selectedCard.slug)}
                       style={{
                         border: `2px solid ${colors.light.border}`,
                         backgroundColor: selectedCard.inWishlist ? `${colors.light.bronze}15` : colors.light.surface,
@@ -1675,7 +1891,6 @@ export function BuscarCartasPage({
               </div>
             </div>
           ) : (
-            /* SEÇÃO DE TENDÊNCIAS / STAPLES DO FORMATO SELECIONADO NA NAVBAR */
             <div className="flex flex-col flex-1" id="catalog-staples-section">
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-4 mt-2">
                 <div>
@@ -1724,10 +1939,7 @@ export function BuscarCartasPage({
                     Nenhum staple encontrado no formato {selectedFormat}
                   </h3>
                   <p className="text-xs max-w-md mt-1 mb-4" style={{ color: colors.light['text-muted'] }}>
-                    Não encontramos cartas para {selectedFormat} com os filtros selecionados
-                    {colorFilter !== 'Todas' && ` (Cor: ${colorFilter})`}
-                    {typeFilter !== 'Todos' && ` (Tipo: ${typeFilter})`}
-                    {rarityFilter !== 'Todas' && ` (Raridade: ${rarityFilter})`}.
+                    Não encontramos cartas para {selectedFormat} com os filtros selecionados.
                   </p>
                   <button
                     type="button"
@@ -1745,7 +1957,6 @@ export function BuscarCartasPage({
                 </div>
               ) : (
                 <>
-                  {/* Grid de 12 cartas paginadas */}
                   <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
                     {paginatedStaples.map((card) => {
                       const isInCollection = collectionSlugs.has(card.slug);
@@ -1761,19 +1972,14 @@ export function BuscarCartasPage({
                             borderColor: colors.light.border,
                           }}
                         >
-                          {/* Imagem Real da Scryfall com Badges Sobrepostos */}
                           <div className="relative aspect-[0.714] w-full overflow-hidden bg-black/5">
-                            <img
+                            <SafeCardImage
                               src={card.image_url}
                               alt={card.name}
-                              loading="lazy"
+                              name={card.name}
                               className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                              onError={(e) => {
-                                (e.target as HTMLElement).style.display = 'none';
-                              }}
                             />
 
-                            {/* Badge de Raridade no Topo Esquerdo */}
                             <div className="absolute top-2 left-2 z-10">
                               <span
                                 className="text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full shadow-xs backdrop-blur-md"
@@ -1786,54 +1992,45 @@ export function BuscarCartasPage({
                               </span>
                             </div>
 
-                            {/* Custo de Mana no Topo Direito */}
-                            {card.mana_cost && (
-                              <div className="absolute top-2 right-2 z-10">
-                                <div className="px-1.5 py-0.5 rounded-full backdrop-blur-md bg-black/60 shadow-xs flex items-center">
-                                  {renderManaCost(card.mana_cost)}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Ações Rápidas de Coleção e Wishlist no Hover */}
                             <div className="absolute inset-x-2 bottom-2 z-10 flex gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                               <button
                                 type="button"
-                                title="Adicionar à Coleção"
+                                title={isInCollection ? "Remover da coleção" : "Adicionar à Coleção"}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleAddCollection(card.name, card.slug);
+                                  handleToggleCollection({
+                                    name: card.name,
+                                    slug: card.slug,
+                                    setCode: card.set_code,
+                                    setName: card.set,
+                                    imageUrl: card.image_url,
+                                  });
                                 }}
-                                className="flex-1 py-1 px-1.5 rounded-lg text-[10px] font-black shadow-md transition-transform active:scale-95 flex items-center justify-center gap-1 cursor-pointer"
-                                style={{
-                                  backgroundColor: isInCollection ? colors.light.surface : colors.light.dark,
-                                  color: isInCollection ? colors.light['text-main'] : '#ffffff',
-                                  border: `1px solid ${colors.light.dark}`,
-                                }}
+                                className={`flex-1 py-1.5 px-2 rounded-xl text-[10px] font-black shadow-lg transition-transform active:scale-95 flex items-center justify-center gap-1 cursor-pointer border ${isInCollection
+                                  ? 'bg-[#171513] text-white border-[#171513] shadow-inner scale-[0.98]'
+                                  : 'bg-white text-neutral-900 border-neutral-300 hover:bg-neutral-100'
+                                  }`}
                               >
                                 {isInCollection ? '✓ Na coleção' : '+ Coleção'}
                               </button>
 
                               <button
                                 type="button"
-                                title="Adicionar à Lista de Desejos"
+                                title={isInWishlist ? "Remover dos desejos" : "Adicionar à Lista de Desejos"}
                                 onClick={(e) => {
                                   e.stopPropagation();
-                                  handleAddWishlist(card.name, card.slug);
+                                  handleToggleWishlist(card.name, card.slug);
                                 }}
-                                className="p-1 px-2 rounded-lg text-[11px] font-black shadow-md transition-transform active:scale-95 flex items-center justify-center cursor-pointer"
-                                style={{
-                                  backgroundColor: isInWishlist ? colors.light.bronze : colors.light.surface,
-                                  color: isInWishlist ? '#ffffff' : colors.light.bronze,
-                                  border: `1px solid ${colors.light.border}`,
-                                }}
+                                className={`py-1.5 px-2.5 rounded-xl text-[11px] font-black shadow-lg transition-transform active:scale-95 flex items-center justify-center cursor-pointer border ${isInWishlist
+                                  ? 'bg-[#9b7130] text-white border-[#9b7130] shadow-inner'
+                                  : 'bg-white text-[#9b7130] border-neutral-300 hover:bg-neutral-100'
+                                  }`}
                               >
                                 ★
                               </button>
                             </div>
                           </div>
 
-                          {/* Rodapé do Card com Nome, Edição, Preço e Tipo */}
                           <div
                             className="p-3 flex flex-col justify-between flex-1 gap-1.5 border-t"
                             style={{ borderColor: colors.light.border }}
@@ -1868,7 +2065,6 @@ export function BuscarCartasPage({
                     })}
                   </div>
 
-                  {/* Barra de Paginação (12 cartas por página) */}
                   {totalPages > 1 && (
                     <div
                       className="flex flex-col sm:flex-row items-center justify-between gap-4 mt-8 pt-5 border-t"
@@ -1908,9 +2104,8 @@ export function BuscarCartasPage({
                                   setStaplesPage(pageNum);
                                   document.getElementById('catalog-staples-section')?.scrollIntoView({ behavior: 'smooth' });
                                 }}
-                                className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center border shadow-2xs ${
-                                  isActive ? 'scale-105 font-black shadow-xs' : 'hover:bg-black/5 opacity-80 hover:opacity-100'
-                                }`}
+                                className={`w-8 h-8 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center border shadow-2xs ${isActive ? 'scale-105 font-black shadow-xs' : 'hover:bg-black/5 opacity-80 hover:opacity-100'
+                                  }`}
                                 style={{
                                   backgroundColor: isActive ? colors.light.dark : colors.light.surface,
                                   borderColor: isActive ? colors.light.dark : colors.light.border,
@@ -1949,7 +2144,6 @@ export function BuscarCartasPage({
         </div>
       </section>
 
-      {/* Tooltip flutuante de preview exclusivo ao passar o mouse sobre a coleção */}
       {hoveredPrint?.image_url ? (
         <div
           className="fixed z-[99999] pointer-events-none transition-all duration-75 ease-out shadow-2xl rounded-2xl overflow-hidden border-2 border-black/20 bg-black/80 backdrop-blur-sm p-1.5"
@@ -1959,10 +2153,11 @@ export function BuscarCartasPage({
             width: '240px',
           }}
         >
-          <img
+          <SafeCardImage
             key={hoveredPrint.image_url}
             src={hoveredPrint.image_url}
             alt={hoveredPrint.set_name}
+            name={hoveredPrint.set_name}
             className="w-full h-auto rounded-xl object-contain shadow-inner"
           />
         </div>
@@ -1975,10 +2170,11 @@ export function BuscarCartasPage({
             width: '240px',
           }}
         >
-          <img
+          <SafeCardImage
             key={hoveredCard.image_url}
             src={hoveredCard.image_url}
             alt={hoveredCard.name}
+            name={hoveredCard.name}
             className="w-full h-auto rounded-xl object-contain shadow-inner"
           />
         </div>

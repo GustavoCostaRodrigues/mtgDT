@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { AppNav } from '../../components/navbar/AppNav';
 import { DeckOptionsMenu } from '../../components/dashboard/DeckOptionsMenu';
 import { colors } from '../../styles/colors';
-import { getStoredUser, type UserProfile } from '../auth/authStorage';
 
 interface DashboardPageProps {
   onLogout?: () => void;
@@ -48,11 +47,9 @@ function ManaItem({ symbol, raw }: { symbol: string; raw: string }) {
   );
 }
 
-// Componente para renderizar custos de mana reais do Magic via Scryfall SVGs
 export function RealManaCost({ value, className = '' }: { value: string; className?: string }) {
   if (!value) return null;
 
-  // Extrai símbolos no formato {2}{U} ou quebra valores como '2U', '1B', '4', 'R', 'W', 'WUBG'
   let symbols: string[] = [];
   const braceMatches = value.match(/\{([^}]+)\}/g);
   if (braceMatches && braceMatches.length > 0) {
@@ -76,7 +73,6 @@ export function RealManaCost({ value, className = '' }: { value: string; classNa
   );
 }
 
-// Mantido para compatibilidade onde Mana é importado
 export { RealManaCost as Mana };
 
 interface DeckItem {
@@ -101,6 +97,7 @@ interface WishItem {
 interface TopCardItem {
   name: string;
   meta: string;
+  setCode?: string;
   value: string;
   mana: string;
   image: string;
@@ -127,17 +124,52 @@ function ManaCurve({ values }: { values: number[] }) {
   );
 }
 
-function CardThumb({ image, name, large = false }: { image: string; name: string; large?: boolean }) {
+function CardThumb({ image, name, set, setCode, large = false }: { image?: string; name: string; set?: string; setCode?: string; large?: boolean }) {
+  const [currentSrc, setCurrentSrc] = useState<string | undefined>(image);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setCurrentSrc(image);
+    setHasError(false);
+  }, [image]);
+
+  const handleError = () => {
+    const code = setCode || (set && set.length <= 5 ? set : '');
+    const cleanSet = code ? `&set=${encodeURIComponent(code.toLowerCase())}` : '';
+    const apiFallback = `https://api.scryfall.com/cards/named?exact=${encodeURIComponent(name)}${cleanSet}&format=image&version=normal`;
+    if (name && currentSrc !== apiFallback) {
+      setCurrentSrc(apiFallback);
+    } else {
+      setHasError(true);
+    }
+  };
+
   return (
-    <div className={`card-thumb group relative overflow-visible ${large ? 'w-[72px]' : 'w-12'}`}>
-      <div className="card-art" role="img" aria-label={`Carta ${name}`} style={{ backgroundImage: `url(${image})` }}>
-        <span>{name}</span>
+    <div className={`relative group shrink-0 ${large ? 'w-[72px]' : 'w-12'}`}>
+      <div className="rounded-md overflow-hidden aspect-[5/7] bg-[#1c1815] shadow-sm border border-black/10 flex items-center justify-center">
+        {currentSrc && !hasError ? (
+          <img
+            src={currentSrc}
+            alt={name}
+            loading="lazy"
+            referrerPolicy="no-referrer"
+            onError={handleError}
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center p-1 text-center bg-neutral-800 text-neutral-300">
+            <span className="text-xs">🃏</span>
+            <span className="text-[7px] font-bold truncate max-w-full">{name}</span>
+          </div>
+        )}
       </div>
-      <div className="card-preview pointer-events-none absolute bottom-full left-1/2 z-30 mb-3 hidden w-48 -translate-x-1/2 group-hover:block">
-        <div className="card-art rounded-xl text-sm shadow-2xl" style={{ backgroundImage: `url(${image})` }}>
-          <span>{name}</span>
+      {currentSrc && !hasError && (
+        <div className="pointer-events-none absolute bottom-full left-1/2 z-30 mb-3 hidden w-48 -translate-x-1/2 group-hover:block">
+          <div className="rounded-xl overflow-hidden shadow-2xl bg-[#1c1815] aspect-[5/7] border border-black/20 flex items-center justify-center">
+            <img src={currentSrc} alt={name} referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -147,41 +179,33 @@ export function DashboardPage({
   onNavigate,
   onSearch,
 }: DashboardPageProps) {
-  const [currentUser, setCurrentUser] = useState<UserProfile>(getStoredUser());
   const [topFilter, setTopFilter] = useState('Mais usadas');
 
-  // Decks reais do usuário logado (inicia vazio, sem dados mockados)
   const [decks, setDecks] = useState<DeckItem[]>([]);
   const [wishes] = useState<WishItem[]>([]);
-  const [topCards] = useState<TopCardItem[]>([]);
+  const [topCards, setTopCards] = useState<TopCardItem[]>([]);
 
-  // Sincroniza dados do usuário logado
   useEffect(() => {
-    const handleUserChange = (e: any) => {
-      const user = e?.detail || getStoredUser();
-      setCurrentUser(user);
-    };
+    const handleUserChange = () => { };
     window.addEventListener('spellbinder-user-change', handleUserChange);
     return () => {
       window.removeEventListener('spellbinder-user-change', handleUserChange);
     };
   }, []);
 
-  // Busca decks reais do usuário logado na API se houver token
   useEffect(() => {
     const token = localStorage.getItem('spellbinder_token');
     if (!token) {
       setDecks([]);
+      setTopCards([]);
       return;
     }
 
+    // Busca Decks
     fetch('http://localhost:3333/api/decks', {
       headers: { Authorization: `Bearer ${token}` },
     })
-      .then((res) => {
-        if (res.ok) return res.json();
-        return [];
-      })
+      .then((res) => (res.ok ? res.json() : []))
       .then((data) => {
         if (Array.isArray(data) && data.length > 0) {
           const mapped: DeckItem[] = data.map((d: any) => ({
@@ -193,17 +217,60 @@ export function DashboardPage({
             progress: Math.min(100, Math.round(((d.totalCards || 0) / 60) * 100)),
             cards: `${d.totalCards || 0}/60`,
             manaCurve: [4, 8, 12, 10, 6, 2, 1],
-            image: d.image || 'https://cards.scryfall.io/normal/front/8/2/82c7f3a1-3d25-4e6f-8e0f-10bd30d7e4f2.jpg',
+            image: d.image || '',
           }));
           setDecks(mapped);
         } else {
           setDecks([]);
         }
       })
+      .catch(() => setDecks([]));
+
+    // Busca Coleção Real para os Top Cards
+    fetch('http://localhost:3333/api/collection', {
+      headers: { Authorization: `Bearer ${token}` },
+    })
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const mappedTop: TopCardItem[] = data.map((item: any) => {
+            const cardInfo = item.cards || item.card || item.scryfall_cards_cache || item;
+
+            const imageUrl =
+              cardInfo.image_url ||
+              cardInfo.image_uri ||
+              cardInfo.image_uris?.normal ||
+              cardInfo.image_uris?.large ||
+              cardInfo.image ||
+              item.image_url ||
+              item.image_uri ||
+              '';
+
+            const setCode = cardInfo.set_code || item.set_code || '';
+            const setName = cardInfo.set_name || item.set_name || (setCode ? setCode.toUpperCase() : 'Coleção');
+
+            const rawPrice = cardInfo.prices?.usd || cardInfo.price || item.prices?.usd || item.price;
+            const usd = typeof rawPrice === 'number' ? rawPrice : parseFloat(rawPrice || '0');
+            const priceFormatted = cardInfo.price_formatted || (usd > 0 ? `US$ ${usd.toFixed(2)}` : 'US$ 6.28');
+
+            return {
+              name: cardInfo.name || item.name || 'Carta',
+              meta: setName,
+              setCode: setCode,
+              value: priceFormatted,
+              mana: cardInfo.mana_cost || item.mana_cost || '',
+              image: imageUrl,
+            };
+          });
+          setTopCards(mappedTop);
+        } else {
+          setTopCards([]);
+        }
+      })
       .catch(() => {
-        setDecks([]);
+        setTopCards([]);
       });
-  }, [currentUser.id]);
+  }, []);
 
   return (
     <main
@@ -234,7 +301,7 @@ export function DashboardPage({
             </a>
           </div>
 
-          {/* Decks Grid com Manas Reais do Magic e Aviso se Vazio */}
+          {/* Decks Grid */}
           <div className="deck-grid">
             {decks.length === 0 ? (
               <div
@@ -442,25 +509,29 @@ export function DashboardPage({
               className="dashboard-panel rounded-2xl border p-6 shadow-sm"
               style={{ backgroundColor: colors.light.surface, borderColor: colors.light.border }}
             >
-              <div className="panel-heading">
+              <div className="flex items-center justify-between gap-4 mb-5">
                 <div>
-                  <p className="eyebrow" style={{ color: colors.light.bronze }}>Sua coleção física</p>
-                  <h2 style={{ color: colors.light['text-main'] }}>Top cards</h2>
+                  <p className="eyebrow text-[11px] font-bold uppercase tracking-wider" style={{ color: colors.light.bronze }}>Sua coleção física</p>
+                  <h2 className="text-xl font-black tracking-tight" style={{ color: colors.light['text-main'] }}>Top cards</h2>
                 </div>
-              </div>
 
-              <div className="filter-tabs">
-                {['Mais usadas', 'Mais recentes', 'Mais caras'].map((filter) => (
-                  <button
-                    key={filter}
-                    className={topFilter === filter ? 'active' : ''}
-                    onClick={() => setTopFilter(filter)}
-                    type="button"
-                    style={topFilter === filter ? { backgroundColor: colors.light.dark, color: '#fff' } : {}}
-                  >
-                    {filter}
-                  </button>
-                ))}
+                <div className="flex items-center gap-1 bg-black/5 dark:bg-white/5 p-1 rounded-xl border" style={{ borderColor: colors.light.border }}>
+                  {['Mais usadas', 'Mais recentes', 'Mais caras'].map((filter) => (
+                    <button
+                      key={filter}
+                      className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer border-0 ${topFilter === filter ? 'shadow-xs' : 'opacity-70 hover:opacity-100 bg-transparent'}`}
+                      onClick={() => setTopFilter(filter)}
+                      type="button"
+                      style={
+                        topFilter === filter
+                          ? { backgroundColor: colors.light.dark, color: '#fff' }
+                          : { color: colors.light['text-main'] }
+                      }
+                    >
+                      {filter}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="top-card-list">
@@ -494,9 +565,9 @@ export function DashboardPage({
                   </div>
                 ) : (
                   topCards.map((card, index) => (
-                    <div className="top-card-row" key={card.name}>
-                      <span className="rank font-mono text-xs font-bold" style={{ color: colors.light.bronze }}>0{index + 1}</span>
-                      <CardThumb image={card.image} name={card.name} />
+                    <div className="top-card-row flex items-center gap-4 py-3 border-b last:border-0" key={card.name} style={{ borderColor: colors.light.border }}>
+                      <span className="rank font-mono text-xs font-bold w-6 text-center" style={{ color: colors.light.bronze }}>0{index + 1}</span>
+                      <CardThumb image={card.image} name={card.name} set={card.meta} setCode={card.setCode} />
                       <div className="min-w-0 flex-1">
                         <strong className="block truncate text-sm" style={{ color: colors.light.dark }}>{card.name}</strong>
                         <div className="mt-1 mb-0.5">
