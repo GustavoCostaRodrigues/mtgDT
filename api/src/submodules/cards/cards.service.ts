@@ -188,10 +188,19 @@ async function fetchCardPrints(cardName: string) {
         seenSets.add(setKey);
         seenImages.add(imageUrl);
 
+        const isShowcase = Array.isArray(p.frame_effects) && p.frame_effects.includes('showcase');
+        const isBorderless = p.border_color === 'borderless';
+        let displaySetName = p.set_name;
+        if (isShowcase) displaySetName += ' (Showcase)';
+        else if (isBorderless) displaySetName += ' (Borderless)';
+        else if (p.promo) displaySetName += ' (Promo)';
+
         results.push({
           id: p.id,
           set_code: p.set,
-          set_name: p.set_name,
+          set_name: displaySetName,
+          raw_set_name: p.set_name,
+          collector_number: p.collector_number,
           rarity: p.rarity,
           image_url: imageUrl,
           price: p.prices?.usd ? `$ ${p.prices.usd}` : undefined,
@@ -229,7 +238,7 @@ export async function getCardBySlug(slug: string) {
     query = query.ilike('name', `%${pattern}%`);
   }
 
-  const { data, error } = await query.maybeSingle();
+  const { data, error } = await query.limit(1).maybeSingle();
 
   if (error) {
     throw new Error(`Erro ao buscar carta: ${error.message}`);

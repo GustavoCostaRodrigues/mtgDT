@@ -5,6 +5,7 @@ import cors from 'cors';
 import { authRouter } from './submodules/auth/auth.routes.js';
 import { decksRouter } from './submodules/decks/decks.routes.js';
 import { cardsRouter } from './submodules/cards/cards.routes.js';
+import { collectionRouter } from './submodules/collection/collection.routes.js'; // <-- 1. Importe aqui
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 app.use('/api/auth', authRouter);
 app.use('/api/decks', decksRouter);
 app.use('/api/cards', cardsRouter);
+app.use('/api/collection', collectionRouter); // <-- 2. Registre a rota aqui
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando em http://localhost:${PORT}`);

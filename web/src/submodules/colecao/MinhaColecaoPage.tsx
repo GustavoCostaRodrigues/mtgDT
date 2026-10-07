@@ -9,6 +9,7 @@ export interface CardItem {
   name: string;
   type: string;
   set: string;
+  setCode?: string;
   rarity: string;
   price: string;
   priceNum: number;
@@ -19,15 +20,6 @@ export interface CardItem {
   slug: string;
   image_url?: string;
 }
-
-const fallbackCards: CardItem[] = [
-  { id: '1', name: 'Sol Ring', type: 'Artefato', set: 'Commander Masters', rarity: 'Rara', price: 'US$ 1.65', priceNum: 1.65, color: 'Incolor', quantity: 3, used: 4, art: 'gold', slug: 'sol-ring', image_url: 'https://cards.scryfall.io/normal/front/f/9/f9a32f17-49c4-4654-a087-1ba474f37377.jpg' },
-  { id: '2', name: 'Rhystic Study', type: 'Encantamento', set: 'Commander Masters', rarity: 'Rara', price: 'US$ 38.50', priceNum: 38.50, color: 'Azul', quantity: 1, used: 1, art: 'blue', slug: 'rhystic-study', image_url: 'https://cards.scryfall.io/normal/front/d/6/d663a726-7848-46ff-a5a4-0e0a56e75b47.jpg' },
-  { id: '3', name: 'Lightning Bolt', type: 'Instantânea', set: 'Modern Horizons', rarity: 'Incomum', price: 'US$ 2.10', priceNum: 2.10, color: 'Vermelho', quantity: 4, used: 3, art: 'red', slug: 'lightning-bolt', image_url: 'https://cards.scryfall.io/normal/front/f/2/f2aed879-2426-4447-9753-277732a39281.jpg' },
-  { id: '4', name: 'Swords to Plowshares', type: 'Instantânea', set: 'The List', rarity: 'Incomum', price: 'US$ 1.80', priceNum: 1.80, color: 'Branco', quantity: 2, used: 3, art: 'cream', slug: 'swords-to-plowshares', image_url: 'https://cards.scryfall.io/normal/front/3/d/3d3e0400-0e1b-4f93-87bb-788812c6a282.jpg' },
-  { id: '5', name: 'Orcish Bowmasters', type: 'Criatura', set: 'Tales of Middle-earth', rarity: 'Rara', price: 'US$ 42.00', priceNum: 42.00, color: 'Preto', quantity: 2, used: 2, art: 'purple', slug: 'orcish-bowmasters', image_url: 'https://cards.scryfall.io/normal/front/7/c/7c024bae-5631-4e20-ac69-df392ac9e109.jpg' },
-  { id: '6', name: 'Birds of Paradise', type: 'Criatura', set: 'Ravnica Remastered', rarity: 'Rara', price: 'US$ 7.90', priceNum: 7.90, color: 'Verde', quantity: 1, used: 2, art: 'green', slug: 'birds-of-paradise', image_url: 'https://cards.scryfall.io/normal/front/f/e/fe016a24-e684-4458-8120-f56550742fef.jpg' },
-];
 
 function formatRarity(rarity?: string): string {
   switch (rarity?.toLowerCase()) {
@@ -56,14 +48,35 @@ function formatColor(colors?: string[], typeLine?: string): string {
 }
 
 function CardArt({ card, large = false }: { card: CardItem; large?: boolean }) {
-  if (card.image_url) {
+  const [currentSrc, setCurrentSrc] = useState<string | undefined>(card.image_url);
+  const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setCurrentSrc(card.image_url);
+    setHasError(false);
+  }, [card.image_url]);
+
+  const handleError = () => {
+    const code = card.setCode || (card.set && card.set.length <= 5 ? card.set : '');
+    const cleanSet = code ? `&set=${encodeURIComponent(code.toLowerCase())}` : '';
+    const apiFallback = `https://api.scryfall.com/cards/named?exact=${encodeURIComponent(card.name)}${cleanSet}&format=image&version=normal`;
+    if (card.name && currentSrc !== apiFallback) {
+      setCurrentSrc(apiFallback);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  if (currentSrc && !hasError) {
     return (
       <div className={`relative w-full aspect-[2.5/3.5] overflow-hidden rounded-t-xl bg-[#1c1815] flex items-center justify-center p-1.5`}>
         <img
-          src={card.image_url}
+          src={currentSrc}
           alt={card.name}
           className="w-full h-full object-contain rounded-lg shadow-sm"
           loading="lazy"
+          referrerPolicy="no-referrer"
+          onError={handleError}
         />
       </div>
     );
@@ -86,45 +99,93 @@ export function MinhaColecaoPage({
   const [colorFilter, setColorFilter] = useState('Todas');
   const [typeFilter, setTypeFilter] = useState('Todos os tipos');
   const [rarityFilter, setRarityFilter] = useState('Todas');
-  const [cardsList, setCardsList] = useState<CardItem[]>(fallbackCards);
-  const [selectedCard, setSelectedCard] = useState<CardItem>(fallbackCards[0]);
+
+  // Inicia rigorosamente vazio para refletir unicamente o banco de dados real
+  const [cardsList, setCardsList] = useState<CardItem[]>([]);
+  const [selectedCard, setSelectedCard] = useState<CardItem | null>(null);
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [loading, setLoading] = useState(false);
 
   const fetchCardsFromApi = useCallback(async (searchTerm: string) => {
     setLoading(true);
     try {
-      const qParam = encodeURIComponent(searchTerm.trim() || 'sol');
-      const response = await fetch(`http://localhost:3333/api/cards/search?q=${qParam}&limit=30`);
+      const token = localStorage.getItem('spellbinder_token');
+      if (!token) {
+        setCardsList([]);
+        setSelectedCard(null);
+        setLoading(false);
+        return;
+      }
+
+      const url = `http://localhost:3333/api/collection${searchTerm.trim() ? `?search=${encodeURIComponent(searchTerm.trim())}` : ''}`;
+
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
       if (response.ok) {
         const rawData = await response.json();
-        if (Array.isArray(rawData) && rawData.length > 0) {
+        if (Array.isArray(rawData)) {
           const mappedCards: CardItem[] = rawData.map((c: any, index: number) => {
-            const usd = c.prices?.usd ? parseFloat(c.prices.usd) : (c.prices?.usd_foil ? parseFloat(c.prices.usd_foil) : 0);
-            const priceFormatted = usd > 0 ? `US$ ${usd.toFixed(2)}` : (c.prices?.eur ? `€ ${c.prices.eur}` : 'R$ 15,00');
-            const cardId = String(c.id || c.scryfall_id || index);
+            const cardInfo = c.cards || c.card || c.scryfall_cards_cache || c;
+            const setCode = cardInfo.set_code || c.set_code || '';
+            const setName = cardInfo.set_name || c.set_name || setCode.toUpperCase() || '';
+
+            const rawPrice =
+              cardInfo.prices?.usd ||
+              cardInfo.prices?.usd_foil ||
+              cardInfo.price ||
+              c.prices?.usd ||
+              c.price;
+
+            const usd = typeof rawPrice === 'number' ? rawPrice : parseFloat(rawPrice || '0');
+            const priceFormatted = usd > 0 ? `US$ ${usd.toFixed(2)}` : '';
+
+            const cardId = String(c.id || cardInfo.id || cardInfo.scryfall_id || index);
+
+            const img =
+              cardInfo.image_url ||
+              cardInfo.image_uri ||
+              cardInfo.image_uris?.normal ||
+              cardInfo.image_uris?.large ||
+              cardInfo.image ||
+              c.image_url ||
+              c.image_uri ||
+              '';
+
             return {
               id: cardId,
-              name: c.name,
-              type: c.type_line || 'Carta',
-              set: c.set_name || (c.set_code ? c.set_code.toUpperCase() : 'Edição Especial'),
-              rarity: formatRarity(c.rarity),
+              name: cardInfo.name || c.name || '',
+              type: cardInfo.type_line || c.type_line || '',
+              set: setName,
+              setCode: setCode,
+              rarity: formatRarity(cardInfo.rarity || c.rarity),
               price: priceFormatted,
-              priceNum: usd > 0 ? usd : 15,
-              color: formatColor(c.colors, c.type_line),
-              quantity: Math.floor(Math.random() * 4) + 1,
-              used: Math.floor(Math.random() * 3),
+              priceNum: usd,
+              color: formatColor(cardInfo.colors || c.colors, cardInfo.type_line || c.type_line),
+              quantity: typeof c.quantity === 'number' && c.quantity > 0 ? c.quantity : 1,
+              used: 0,
               art: 'gold',
-              slug: c.scryfall_id || c.id || c.name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-              image_url: c.image_url || c.image_uris?.normal || c.image_uris?.large,
+              slug: cardInfo.scryfall_id || cardInfo.id || (cardInfo.name || c.name || '').toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+              image_url: img,
             };
           });
           setCardsList(mappedCards);
-          setSelectedCard(mappedCards[0]);
+          setSelectedCard(mappedCards.length > 0 ? mappedCards[0] : null);
+        } else {
+          setCardsList([]);
+          setSelectedCard(null);
         }
+      } else {
+        setCardsList([]);
+        setSelectedCard(null);
       }
     } catch (err) {
-      console.warn('Fallback para cartas locais devido a erro na API:', err);
+      console.warn('Erro ao carregar coleção da API:', err);
+      setCardsList([]);
+      setSelectedCard(null);
     } finally {
       setLoading(false);
     }
@@ -178,7 +239,7 @@ export function MinhaColecaoPage({
               <input
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="Buscar por nome no catálogo Scryfall..."
+                placeholder="Buscar por nome na sua coleção..."
                 className="w-full bg-transparent border-none outline-none text-xs font-medium"
                 style={{ color: colors.light['text-main'] }}
               />
@@ -240,11 +301,19 @@ export function MinhaColecaoPage({
 
               {loading ? (
                 <div className="py-12 text-center text-sm font-semibold text-[#8b847c] animate-pulse">
-                  Consultando catálogo de cartas...
+                  Consultando base de dados...
                 </div>
               ) : filtered.length === 0 ? (
-                <div className="py-12 text-center text-sm font-semibold text-[#8b847c]">
-                  Nenhuma carta encontrada para a busca "{query}".
+                <div className="rounded-3xl border border-dashed p-12 text-center flex flex-col items-center justify-center my-4 shadow-sm" style={{ borderColor: colors.light.border, backgroundColor: colors.light.surface }}>
+                  <div className="w-12 h-12 rounded-2xl flex items-center justify-center mb-3 shadow-2xs" style={{ backgroundColor: colors.light['surface-alt'], border: `1px solid ${colors.light.border}` }}>
+                    <span className="text-xl">📦</span>
+                  </div>
+                  <h3 className="text-sm font-black tracking-tight" style={{ color: colors.light['text-main'] }}>
+                    Nenhuma carta catalogada
+                  </h3>
+                  <p className="text-xs mt-1 max-w-sm" style={{ color: colors.light['text-muted'] }}>
+                    {query ? `Nenhum resultado encontrado para "${query}".` : 'Você ainda não possui cartas registradas na sua coleção física.'}
+                  </p>
                 </div>
               ) : (
                 <div className={`collection-grid ${view === 'list' ? 'list-view' : ''}`}>
