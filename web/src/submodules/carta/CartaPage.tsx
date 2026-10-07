@@ -163,11 +163,10 @@ export function CartaPage({
                     <button
                       type="button"
                       onClick={() => setIsFoil(!isFoil)}
-                      className={`h-10 px-3 rounded-xl text-xs font-extrabold border transition-colors cursor-pointer ${
-                        isFoil
-                          ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40'
-                          : 'border-black/15 dark:border-white/15 text-[#817970]'
-                      }`}
+                      className={`h-10 px-3 rounded-xl text-xs font-extrabold border transition-colors cursor-pointer ${isFoil
+                        ? 'bg-amber-500/20 text-amber-700 dark:text-amber-300 border-amber-500/40'
+                        : 'border-black/15 dark:border-white/15 text-[#817970]'
+                        }`}
                     >
                       {isFoil ? '✨ Foil' : 'Normal'}
                     </button>

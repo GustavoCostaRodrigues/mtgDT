@@ -1,12 +1,12 @@
 // api/src/submodules/auth/auth.controller.ts
 import type { Request, Response } from 'express';
 import { registerSchema, loginSchema, updateProfileSchema } from './auth.schemas.js';
-import { 
-  registerUser, 
-  loginUser, 
-  getCurrentUserProfile, 
-  updateCurrentUserProfile, 
-  removeCurrentUserAvatar 
+import {
+  registerUser,
+  loginUser,
+  getCurrentUserProfile,
+  updateCurrentUserProfile,
+  removeCurrentUserAvatar
 } from './auth.service.js';
 
 // --- CREATE ------------------------------------------------------------------
@@ -40,6 +40,7 @@ export async function handleLogin(req: Request, res: Response) {
       });
     }
 
+    // O loginUser (no service) recebe os dados validados, incluindo o rememberMe
     const result = await loginUser(bodyValidation.data);
     return res.status(200).json(result);
   } catch (error: any) {
